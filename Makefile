@@ -16,4 +16,4 @@ exe1:
 	@./indice datasets/tiny/train.txt out.bin
 
 vexe1: 
-	@valgrind ./indice datasets/tiny/train.txt out.bin
+	@valgrind -s ./indice datasets/tiny/train.txt out.bin
