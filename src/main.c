@@ -6,7 +6,6 @@
 
 
 int main(int argc, char *argv[]){
-    printf("a\n");
     //prepara e confere os diretorios
     if(argc <= 1){
         printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
@@ -40,25 +39,22 @@ int main(int argc, char *argv[]){
     pp_Palavras = LeTodosOsArquivosPalavra(fArquivo_caminho_noticias, pp_Palavras, qtd_Arquivos);
     fclose(fArquivo_caminho_noticias);
 
+    printf("\n");
     TEMP_ImprimeStructPalavras(pp_Palavras);
-    //cria dicionarioclear
     
-    /*
-    inicializa pp_palavras, quantidadeDocumentos;
-    pp_palavras = LeDIcionarioPalavras(fArquivo_caminho_noticias, pp_palavras);
-    fclose(fArquivo_caminho_noticias);
-    */
 
 
-    //ArmazenaDadosEmBinario(saida, documentos, palavras); *******
-    //free(pp_Palavras);
-    printf("\n\nprograma encerrado com sucesso!\n");
+
+    //ArmazenaDadosEmBinario(saida, documentos, palavras);
+
+    LiberaPalavras(pp_Palavras);
+    printf("programa encerrado com sucesso!\n");
     return 0;
 }
 
 
-// 1. liberar o dicionario
-// 2. TF-IDF
+// 1. liberar o dicionario     ok
+// 2. TF-IDF                   ok
 // 3. struct documentos
 // 4. Arquivo binario
 // 5. Funcao get set: Definir parametros e retorno void.
