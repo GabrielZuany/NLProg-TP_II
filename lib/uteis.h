@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef int (*Vetor_Get_or_Set_fn)(char acao[], int valor);
 

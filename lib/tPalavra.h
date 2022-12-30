@@ -32,6 +32,11 @@ int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]);
 
 //calculos com palavras
 void Insere_Frequencias_em_Doc(int frequencia, int idx_doc, tPalavra* p_palavra);
+void Insere_TF_IDF_em_Doc(double TF_IDF, int idx_doc, tPalavra *p_palavra);
+void Atualiza_Palavra_TF_IDF(tPalavra *p_palavra, int qtdDocumentos);
+int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocumentos);
+double Calcula_IDF(double n, double DF);
 
-
+//liberacao de palavras
+void LiberaPalavras(tPalavra **pp_Palavras);
 #endif
