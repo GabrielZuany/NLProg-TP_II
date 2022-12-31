@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "uteis.h"
-#define ValorArbitrario 0
+#define null 0
 #define TRUE 1
 #define FALSE 0
 
@@ -39,4 +39,12 @@ double Calcula_IDF(double n, double DF);
 
 //liberacao de palavras
 void LiberaPalavras(tPalavra **pp_Palavras);
+
+
+
+
+
+void ImprimeTodasAsPalavrasDoDocumento(tPalavra** pp_Palavras, int idx_doc);
+void Idx_Docs(tPalavra** pp_Palavras);
+
 #endif

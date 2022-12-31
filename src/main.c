@@ -40,10 +40,10 @@ int main(int argc, char *argv[]){
     fclose(fArquivo_caminho_noticias);
 
     printf("\n");
-    TEMP_ImprimeStructPalavras(pp_Palavras);
+    //TEMP_ImprimeStructPalavras(pp_Palavras);
     
 
-
+    Idx_Docs(pp_Palavras);
 
     //ArmazenaDadosEmBinario(saida, documentos, palavras);
 
@@ -57,4 +57,8 @@ int main(int argc, char *argv[]){
 // 2. TF-IDF                   ok
 // 3. struct documentos
 // 4. Arquivo binario
-// 5. Funcao get set: Definir parametros e retorno void.
+
+
+// Alterações Gabriel.
+// -> tPalavra.c linha 236 à 261
+// -> uteis.c linha 70 à 88

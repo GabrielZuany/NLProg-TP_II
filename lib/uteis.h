@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-
+#define null 0
 typedef int (*Vetor_Get_or_Set_fn)(char acao[], int valor);
 
 
@@ -23,5 +23,5 @@ int Get_Or_Set_Valor(char dado, char acao[], int valor_registrar);
 
 
 
-
+char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx);
 #endif

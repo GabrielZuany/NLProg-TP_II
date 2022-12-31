@@ -30,6 +30,7 @@ void ConfereEntradaValida(char entrada[]){
     if(!(fteste)){
         printf("ERRO: diretorio inexistente\n");
         printf("ex:  ./indice data/train.txt  indice.bin\n");
+        exit(EXIT_FAILURE);
     }
     fclose(fteste);
 }
@@ -64,6 +65,25 @@ int Get_Set_QuantidadeDocumento(char acao[], int valor){
         exit(EXIT_FAILURE);
     }
     return total_Documentos;
+}
+
+char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx){
+    const int qtd_docs = Get_Or_Set_Valor('d', "get", null);
+    static int idx_doc = 0;
+    static char arquivos[sizeof(qtd_docs)*10000][1000];
+    char *str = NULL; 
+    
+    if(strcmp(acao, "set") == 0){
+        strcpy(arquivos[idx_doc], diretorio);
+        idx_doc++;
+    }else if(strcmp(acao, "get") == 0){
+    }else{
+        printf("ERRO: '%s' eh um comando nao existente.\n=> Comandos validos: 'get', 'set'\n", acao);
+        exit(EXIT_FAILURE);   
+    }
+    
+    str = arquivos[idx];
+    return str;
 }
 
 void Dispatch_table_Get_Set_inicializa(){
