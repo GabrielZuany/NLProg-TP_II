@@ -70,7 +70,7 @@ int Get_Set_QuantidadeDocumento(char acao[], int valor){
 char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx){
     const int qtd_docs = Get_Or_Set_Valor('d', "get", null);
     static int idx_doc = 0;
-    static char arquivos[sizeof(qtd_docs)*10000][1000];
+    static char arquivos[1000000000][100]; //[qtd docs][tamanho do texto]
     char *str = NULL; 
     
     if(strcmp(acao, "set") == 0){

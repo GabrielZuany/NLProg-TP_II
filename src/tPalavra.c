@@ -88,7 +88,7 @@ FILE* Get_ArquivoNoticia(char caminho[]){
     sscanf(caminho, "%s", aux);
     sprintf(diretorio, "datasets/tiny/%s", aux);
 
-    //Get_Set_NomeArquivos("set", aux, null);
+    Get_Set_NomeArquivos("set", aux, null);
     
     ConfereEntradaValida(diretorio);
     FILE *fArquivo = fopen(diretorio, "r");
@@ -247,14 +247,13 @@ void ImprimeTodasAsPalavrasDoDocumento(tPalavra** pp_Palavras, int idx_doc){
     int idx_palavra = 0;
     int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
     char *nome;
-    //nome = Get_Set_NomeArquivos("get", "a", idx_doc);
-    printf("Palavras no doc [%d]\n", idx_doc);
-    //printf("Palavras no doc [%s]\n", nome);
+    nome = Get_Set_NomeArquivos("get", "a", idx_doc);
+    printf("Palavras no doc idx [%d] '%s'\n", idx_doc, nome);
 
     for(idx_palavra = 0; idx_palavra < qtd_palavras; idx_palavra++){
         
         if(pp_Palavras[idx_palavra]->pFrenquencia[idx_doc] != 0){
-            printf("\tpalavra: '%s'\n\t\t\t  idx[%d]\n\t\t\t  f:%d\n\n", pp_Palavras[idx_palavra]->palavra, idx_palavra, pp_Palavras[idx_palavra]->pFrenquencia[idx_doc]);
+            printf(">>>palavra: '%s'\n>>>idx[%d]\n>>>f:%d\n\n", pp_Palavras[idx_palavra]->palavra, idx_palavra, pp_Palavras[idx_palavra]->pFrenquencia[idx_doc]);
         }
     }
 }
