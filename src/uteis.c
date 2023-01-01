@@ -35,9 +35,15 @@ void ConfereEntradaValida(char entrada[]){
     fclose(fteste);
 }
 
+void ResetaString(char str[]){
+    int i = 0;
+    for(i=0; i<strlen(str); i++){
+        str[i] = '\0';
+    }
+}
+
 
 //----------------dispatch_table_Get_Or_Set -------------
-
 
 int Get_Set_QuantidadePalavras(char acao[], int valor){
     static int total_palavras = 0;
@@ -67,32 +73,11 @@ int Get_Set_QuantidadeDocumento(char acao[], int valor){
     return total_Documentos;
 }
 
-char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx){
-    const int qtd_docs = Get_Or_Set_Valor('d', "get", null);
-    static int idx_doc = 0;
-    static char arquivos[1000000000][100]; //[qtd docs][tamanho do texto]
-    char *str = NULL; 
-    
-    if(strcmp(acao, "set") == 0){
-        strcpy(arquivos[idx_doc], diretorio);
-        idx_doc++;
-    }else if(strcmp(acao, "get") == 0){
-    }else{
-        printf("ERRO: '%s' eh um comando nao existente.\n=> Comandos validos: 'get', 'set'\n", acao);
-        exit(EXIT_FAILURE);   
-    }
-    
-    str = arquivos[idx];
-    return str;
-}
-
 void Dispatch_table_Get_Set_inicializa(){
-    // apenas para sabermos quais funcoes nao foram definidas ainda
     for (int i = 0; i < 256; i++){
         dispatch_table_Get_Or_Set[i] = NULL;
 
     }   
-    // TODO: adicionar funcoes...
     dispatch_table_Get_Or_Set['d'] = Get_Set_QuantidadeDocumento; //d = documento
     dispatch_table_Get_Or_Set['p'] = Get_Set_QuantidadePalavras; // p = palavra
 }
@@ -112,3 +97,38 @@ int Get_Or_Set_Valor(char dado, char acao[], int valor_registrar){
     Dispatch_table_executa(dado, acao, valor_registrar);
 }
 
+char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx){
+    const int qtd_docs = Get_Or_Set_Valor('d', "get", null);
+    static int idx_doc = 0;
+    static char arquivos[10000000][100]; //[qtd docs][tamanho do texto]
+    char *str = NULL; 
+    
+    if(strcmp(acao, "set") == 0){
+        strcpy(arquivos[idx_doc], diretorio);
+        idx_doc++;
+    }else if(strcmp(acao, "get") == 0){
+    }else{
+        printf("ERRO: '%s' eh um comando nao existente.\n=> Comandos validos: 'get', 'set'\n", acao);
+        exit(EXIT_FAILURE);   
+    }
+    str = arquivos[idx];
+    return str;
+}
+
+char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx){
+    const int qtd_docs = Get_Or_Set_Valor('d', "get", null);
+    static int idx_doc = 0;
+    static char lista_tipos[10000000][10]; //[qtd docs][tamanho do texto]
+    char *str = NULL; 
+    
+    if(strcmp(acao, "set") == 0){
+        strcpy(lista_tipos[idx_doc], tipo);
+        idx_doc++;
+    }else if(strcmp(acao, "get") == 0){
+    }else{
+        printf("ERRO: '%s' eh um comando nao existente.\n=> Comandos validos: 'get', 'set'\n", acao);
+        exit(EXIT_FAILURE);   
+    }
+    str = lista_tipos[idx];
+    return str;
+}

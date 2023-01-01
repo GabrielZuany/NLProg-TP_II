@@ -6,6 +6,22 @@ struct tPalavra{
     double *pTF_IDF;
 };
 
+//----PROGRAMA 1-----
+void Idx_Palavras(tPalavra** pp_Palavras){
+    int i = 0, j = 0;
+    int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
+    int qtd_docs = Get_Or_Set_Valor('d', "get", null);
+
+    for(i=0; i<qtd_palavras; i++){
+        printf("palavra[%d]: %s\n", i,pp_Palavras[i]->palavra);
+        for(j=0; j<qtd_docs; j++){
+            printf("doc[%d]:   f = %d  idf =  %.2lf\n", j, pp_Palavras[i]->pFrenquencia[j], pp_Palavras[i]->pTF_IDF[j]);
+        }
+        printf("\n");
+    }
+}
+//---------------
+
 
 //leitura
 tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** pp_Palavras, int qtd_Arquivos){
@@ -57,39 +73,28 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
             freq = pp_Palavras[idx_aux]->pFrenquencia[idxDocumento];    
             Insere_Frequencias_em_Doc((freq+1), idxDocumento, pp_Palavras[idx_aux]);
         }
-
-        //printf("%d: %s\n", i, palavra); //verifica cada palavra
         ResetaString(str);
     }
     return pp_Palavras;
 }
 
 
-void TEMP_ImprimeStructPalavras(tPalavra** pp_Palavras){
-    int i = 0, j = 0;
-    int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
-    int qtd_docs = Get_Or_Set_Valor('d', "get", null);
-
-    for(i=0; i<qtd_palavras; i++){
-        printf("palavra[%d]: %s\n", i,pp_Palavras[i]->palavra);
-        for(j=0; j<qtd_docs; j++){
-            printf("doc[%d]:   f = %d  idf =  %.2lf\n", j, pp_Palavras[i]->pFrenquencia[j], pp_Palavras[i]->pTF_IDF[j]);
-        }
-        printf("\n");
-    }
-}
 
 
 
 // --------relacionadas com arquivo diretorio--------
 FILE* Get_ArquivoNoticia(char caminho[]){
-    char aux[1000];
-    char diretorio[10000];
-    sscanf(caminho, "%s", aux);
-    sprintf(diretorio, "datasets/tiny/%s", aux);
+    char diretorio[1000];
+    char tipo[100], nome_arq[100];
 
-    Get_Set_NomeArquivos("set", aux, null);
+    sscanf(caminho, "%*[^/]%*c%[^ ]", nome_arq);
+    sscanf(caminho, "%*[^ ] %s", tipo);
+
+    Get_Set_NomeArquivos("set", nome_arq, null);
+    Get_Set_TipoNoticia("set", tipo, null);
     
+    sprintf(diretorio, "datasets/tiny/train/%s", nome_arq);
+
     ConfereEntradaValida(diretorio);
     FILE *fArquivo = fopen(diretorio, "r");
     return fArquivo;
@@ -118,13 +123,6 @@ tPalavra* Inicializa_Palavra(char str[], int qtd_docs){
 }
 
 // -----------------auxiliares----------------------
-void ResetaString(char str[]){
-    int i = 0;
-    for(i=0; i<strlen(str); i++){
-        str[i] = '\0';
-    }
-}
-
 int ComparaPalavras(const void *p1, const void *p2){
     const struct tPalavra *palavra1 = p1;
     const struct tPalavra *palavra2 = p2;
@@ -155,7 +153,31 @@ int PalavraRegistrada(tPalavra **pp_Palavras, int qtdPalavras, char palavra[]){
     return 0;
 }
 
-//calculo com palavras
+int Get_Qtd_Palavras_No_Doc(tPalavra** pp_Palavras, int idx_doc){
+    int i = 0, j = 0, count = 0;
+    int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
+    int qtd_docs = Get_Or_Set_Valor('d', "get", null);
+    for(i=0; i<qtd_palavras; i++){
+        for(j=0; j<qtd_docs; j++){
+            if(pp_Palavras[i]->pFrenquencia[j] != 0){
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+void ImprimePalavra(tPalavra* p_palavra){
+    printf("%s", p_palavra->palavra);
+}
+
+int RetornaFrequenciaPalavra(tPalavra* p_palavra, int idx_doc){
+    return p_palavra->pFrenquencia[idx_doc];
+}
+
+
+
+//-----------------calculo com palavras--------------------
 void Insere_Frequencias_em_Doc(int frequencia, int idx_doc, tPalavra* p_palavra){
     p_palavra->pFrenquencia[idx_doc] = frequencia;
 }
@@ -211,7 +233,7 @@ int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocument
 }
 
 
-//liberacao de arquivos
+//--------------liberacao de memoria--------------
 void LiberaPalavras(tPalavra **pp_Palavras){
     int qtdPalavras = 0, i = 0;
     qtdPalavras = Get_Or_Set_Valor('p', "get", null);
@@ -222,38 +244,4 @@ void LiberaPalavras(tPalavra **pp_Palavras){
         free(pp_Palavras[i]);
     }
     free(pp_Palavras);
-}
-
-
-
-
-
-
-
-
-
-
-void Idx_Docs(tPalavra** pp_Palavras){
-    int qtd_docs = Get_Or_Set_Valor('d', "get", null);
-    int idx_doc;
-
-    for(idx_doc=0; idx_doc<qtd_docs; idx_doc++){
-        ImprimeTodasAsPalavrasDoDocumento(pp_Palavras, idx_doc);
-        printf("\n----------------------------------------------------\n\n");
-    }
-}
-
-void ImprimeTodasAsPalavrasDoDocumento(tPalavra** pp_Palavras, int idx_doc){
-    int idx_palavra = 0;
-    int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
-    char *nome;
-    nome = Get_Set_NomeArquivos("get", "a", idx_doc);
-    printf("Palavras no doc idx [%d] '%s'\n", idx_doc, nome);
-
-    for(idx_palavra = 0; idx_palavra < qtd_palavras; idx_palavra++){
-        
-        if(pp_Palavras[idx_palavra]->pFrenquencia[idx_doc] != 0){
-            printf(">>>palavra: '%s'\n>>>idx[%d]\n>>>f:%d\n\n", pp_Palavras[idx_palavra]->palavra, idx_palavra, pp_Palavras[idx_palavra]->pFrenquencia[idx_doc]);
-        }
-    }
 }

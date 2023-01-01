@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../lib/uteis.h"
 #include "../lib/tPalavra.h"
+#include "../lib/tDocumento.h"
 
 
 int main(int argc, char *argv[]){
@@ -25,9 +26,7 @@ int main(int argc, char *argv[]){
     
     //le quantidade de documentos
     FILE *fArquivo_caminho_noticias = fopen(entrada, "r");
-    int qtd_Arquivos = 1;
-    //Get_Or_Set_Valor('d', "set", 1);
-    qtd_Arquivos = LeQuantidadeDeArquivos(fArquivo_caminho_noticias);
+    int qtd_Arquivos = LeQuantidadeDeArquivos(fArquivo_caminho_noticias);
     Get_Or_Set_Valor('d', "set", qtd_Arquivos);
     fclose(fArquivo_caminho_noticias);
     
@@ -38,16 +37,21 @@ int main(int argc, char *argv[]){
     pp_Palavras = Inicializa_Array_Palavra();
     pp_Palavras = LeTodosOsArquivosPalavra(fArquivo_caminho_noticias, pp_Palavras, qtd_Arquivos);
     fclose(fArquivo_caminho_noticias);
-
     printf("\n");
-    //TEMP_ImprimeStructPalavras(pp_Palavras);
-    
 
-    Idx_Docs(pp_Palavras);
+    //inicializa documentos
+    tDocumento** pp_Docs = NULL;
+    pp_Docs = Inicializa_Array_Docs(Get_Or_Set_Valor('d', "get", null));
+    pp_Docs = RegistraPalavrasNosDocumentos(pp_Palavras, pp_Docs);
+
+    //programa 1
+    Idx_Documentos(pp_Docs, pp_Palavras);
+    Idx_Palavras(pp_Palavras);
 
     //ArmazenaDadosEmBinario(saida, documentos, palavras);
 
     LiberaPalavras(pp_Palavras);
+    LiberaDocs(pp_Docs);
     printf("programa encerrado com sucesso!\n");
     return 0;
 }
@@ -55,10 +59,5 @@ int main(int argc, char *argv[]){
 
 // 1. liberar o dicionario     ok
 // 2. TF-IDF                   ok
-// 3. struct documentos
+// 3. struct documentos        ok
 // 4. Arquivo binario
-
-
-// Alterações Gabriel.
-// -> tPalavra.c linha 236 à 261
-// -> uteis.c linha 70 à 88
