@@ -7,6 +7,7 @@
 
 
 int main(int argc, char *argv[]){
+    printf("\n");
     //prepara e confere os diretorios
     if(argc <= 1){
         printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]){
     fArquivo_caminho_noticias = fopen(entrada, "r");
     tPalavra **pp_Palavras = NULL;
     pp_Palavras = Inicializa_Array_Palavra();
-    pp_Palavras = LeTodosOsArquivosPalavra(fArquivo_caminho_noticias, pp_Palavras, qtd_Arquivos);
+    pp_Palavras = LeTodosOsArquivosPalavra(fArquivo_caminho_noticias, pp_Palavras, qtd_Arquivos, entrada);
     fclose(fArquivo_caminho_noticias);
     printf("\n");
 
@@ -44,12 +45,36 @@ int main(int argc, char *argv[]){
     pp_Docs = Inicializa_Array_Docs(Get_Or_Set_Valor('d', "get", null));
     pp_Docs = RegistraPalavrasNosDocumentos(pp_Palavras, pp_Docs);
 
-    //programa 1
-    Idx_Documentos(pp_Docs, pp_Palavras);
-    Idx_Palavras(pp_Palavras);
+    
+    //Idx_Documentos(pp_Docs, pp_Palavras);
+    //Idx_Palavras(pp_Palavras);
+    
 
-    //ArmazenaDadosEmBinario(saida, documentos, palavras);
+    //armazena em binario
+    system("mkdir ArquivosBinarios");
+    FILE *fPalavrasBin = fopen("ArquivosBinarios/dicionario.bin", "wb");
+    FILE *fDocumentosBin = fopen("ArquivosBinarios/docs.bin", "wb");
+    if (fPalavrasBin == NULL || fDocumentosBin == NULL){
+        printf("Erro! o documento binario nao foi inicializado com sucesso!\n");
+        exit(EXIT_FAILURE);
+    }
 
+    ArmazenaDocumentosEmBinario(fDocumentosBin, pp_Docs, qtd_Arquivos);
+    ArmazenaPalavrasEmBinario(fPalavrasBin, pp_Palavras, Get_Or_Set_Valor('p', "get", null));
+    fclose(fDocumentosBin);
+    fclose(fPalavrasBin);
+    
+    //imprime em binario
+    fDocumentosBin = fopen("ArquivosBinarios/docs.bin", "rb");
+    fPalavrasBin = fopen("ArquivosBinarios/dicionario.bin", "rb");
+
+    LeDocsBinario(fDocumentosBin); // vazamento de memoria
+    LeDicionarioBinario(fPalavrasBin); // vazamento de memoria
+
+    fclose(fDocumentosBin);
+    fclose(fPalavrasBin);
+    
+    //frees
     LiberaPalavras(pp_Palavras);
     LiberaDocs(pp_Docs);
     printf("programa encerrado com sucesso!\n");
@@ -57,7 +82,5 @@ int main(int argc, char *argv[]){
 }
 
 
-// 1. liberar o dicionario     ok
-// 2. TF-IDF                   ok
-// 3. struct documentos        ok
-// 4. Arquivo binario
+
+// 1. Arquivo binario em um unico

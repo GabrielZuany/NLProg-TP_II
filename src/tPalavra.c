@@ -1,7 +1,7 @@
 #include "../lib/tPalavra.h"
 
 struct tPalavra{
-    char palavra [50];
+    char palavra[50];
     int *pFrenquencia;
     double *pTF_IDF;
 };
@@ -24,7 +24,7 @@ void Idx_Palavras(tPalavra** pp_Palavras){
 
 
 //leitura
-tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** pp_Palavras, int qtd_Arquivos){
+tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** pp_Palavras, int qtd_Arquivos, char argv[]){
     int i = 0;
     char linha[100000];
 
@@ -33,7 +33,7 @@ tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** 
         fscanf(fArquivo_caminho_noticias, "%[^\n]", linha);
         fscanf(fArquivo_caminho_noticias, "%*c");
         
-        FILE *fArquivo = Get_ArquivoNoticia(linha);
+        FILE *fArquivo = Get_ArquivoNoticia(linha, argv);
         pp_Palavras = LeArquivo(fArquivo, pp_Palavras, i);
 
         //tratar docs
@@ -78,22 +78,40 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
     return pp_Palavras;
 }
 
-
-
-
-
 // --------relacionadas com arquivo diretorio--------
-FILE* Get_ArquivoNoticia(char caminho[]){
-    char diretorio[1000];
+FILE* Get_ArquivoNoticia(char linha[], char argv[]){
+    char diretorio[1000], temp[50], caminho[100], str[1000], argv_copy[100];
+
+    ResetaStrComTam(argv_copy, 100);
+    strcpy(argv_copy, argv);
+    ResetaStrComTam(str, 1000);
+    ResetaStrComTam(diretorio, 1000);
+    ResetaStrComTam(caminho, 100);
+    // ---- nome e tipo de noticia -----
     char tipo[100], nome_arq[100];
+    ResetaStrComTam(nome_arq, 100);
+    sscanf(linha, "%[^ ]", caminho);
+    sscanf(linha, "%*[^/]%*c%[^ ]", nome_arq);
+    sscanf(linha, "%*[^ ]%*c%s", tipo);    
 
-    sscanf(caminho, "%*[^/]%*c%[^ ]", nome_arq);
-    sscanf(caminho, "%*[^ ] %s", tipo);
-
+    
     Get_Set_NomeArquivos("set", nome_arq, null);
     Get_Set_TipoNoticia("set", tipo, null);
-    
-    sprintf(diretorio, "datasets/tiny/train/%s", nome_arq);
+
+
+    int fim = 0;
+    while(1){
+        ResetaStrComTam(str, 1000);
+        sscanf(argv_copy, "%[^/]", str);
+        sscanf(argv_copy,"%*[^/]%*c%s", argv_copy);
+        fim = ConfereTxt(str);
+        if(fim){
+            strcat(diretorio, caminho);
+            break;
+        }
+        strcat(diretorio, str);
+        strcat(diretorio, "/");
+    }
 
     ConfereEntradaValida(diretorio);
     FILE *fArquivo = fopen(diretorio, "r");
@@ -175,8 +193,6 @@ int RetornaFrequenciaPalavra(tPalavra* p_palavra, int idx_doc){
     return p_palavra->pFrenquencia[idx_doc];
 }
 
-
-
 //-----------------calculo com palavras--------------------
 void Insere_Frequencias_em_Doc(int frequencia, int idx_doc, tPalavra* p_palavra){
     p_palavra->pFrenquencia[idx_doc] = frequencia;
@@ -231,6 +247,77 @@ int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocument
     }
     return presencas;
 }
+
+
+//------------arquivos binarios------------
+//====armazenamento
+void ArmazenaPalavrasEmBinario(FILE* bin, tPalavra** pp_Palavras, int qtd_palavras){
+    int i = 0;
+    //qtd palavras
+    fwrite(&qtd_palavras, sizeof(int), 1, bin);
+    
+    for(i = 0; i < qtd_palavras; i++){//nao esta armazenando todas
+        Armazena_UMA_PalavraEmBinario(pp_Palavras[i], bin);
+    }
+}
+
+void Armazena_UMA_PalavraEmBinario(tPalavra* p_Palavra, FILE* bin){
+    int tam_Palavra = strlen(p_Palavra->palavra);
+    int tam_pFrequencia = Get_Or_Set_Valor('d', "get", null);
+    
+    
+    fwrite(&tam_Palavra, sizeof(int), 1, bin);
+    fwrite(p_Palavra->palavra, sizeof(char), tam_Palavra, bin);
+    fwrite(&tam_pFrequencia, sizeof(int), 1, bin);
+    fwrite(p_Palavra->pFrenquencia, sizeof(int), tam_pFrequencia, bin);
+    fwrite(p_Palavra->pTF_IDF, sizeof(double), tam_pFrequencia, bin);
+
+}
+
+//====leitura
+void LeDicionarioBinario(FILE *bin){    
+    char palavra [50];
+    int *pFrenquencia;
+    double *pTF_IDF;
+    int qtd_palavras = 0;    
+    int tam_palavra = 0;
+    int tam_pFrequencia = 0;
+
+    //td palavras
+    fread(&qtd_palavras, sizeof(int), 1, bin);
+    printf("QTD PALAVRAS %d\n\n", qtd_palavras);
+
+
+    int i = 0, j = 0;
+    
+    for(i = 0; i < qtd_palavras; i++){
+        ResetaStrComTam(palavra, 50);
+        //palavra
+        fread(&tam_palavra, sizeof(int), 1, bin);
+        fread(palavra, sizeof(char), tam_palavra, bin);
+        //frequencia
+        fread(&tam_pFrequencia, sizeof(int), 1, bin);
+        pFrenquencia = malloc(sizeof(int) * tam_pFrequencia);
+        fread(pFrenquencia, sizeof(int), tam_pFrequencia, bin);
+        //tf-idf
+        pTF_IDF = malloc(sizeof(double) * tam_pFrequencia);
+        fread(pTF_IDF, sizeof(double), tam_pFrequencia, bin);
+
+        //impressao
+        printf("palavra[%d]:  tamStr: %d str: %s tamFrequencia: %d\n", i, tam_palavra, palavra, tam_pFrequencia);
+        printf("frequencia: ");
+        for(j=0; j<tam_pFrequencia; j++){
+            printf("%d ", pFrenquencia[j]);
+        }
+        printf("\n");
+        printf("TF-IDF ");
+        for(j=0; j<tam_pFrequencia; j++){
+            printf("%lf ", pTF_IDF[j]);
+        }
+        printf("\n\n");
+   }
+}   
+
 
 
 //--------------liberacao de memoria--------------

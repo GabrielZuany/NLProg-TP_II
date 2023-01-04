@@ -19,6 +19,11 @@ tDocumento* Inicializa_Doc(tPalavra** pp_Palavras, char nome[], char tipo[], int
 //------auxiliares-------
 char* Get_NomeArquivos(tDocumento** pp_Docs, int idx);
 
+//-----------arquivo binario----------
+void ArmazenaDocumentosEmBinario(FILE* bin, tDocumento** pp_Docs, int qtd_Arquivos);
+void Armazena_UM_DocumentoEmBinario(tDocumento* p_Doc, FILE* bin);
+void LeDocsBinario(FILE *bin);
+
 //------registrar e montar struct-------------
 tDocumento** RegistraPalavrasNosDocumentos(tPalavra** pp_Palavras, tDocumento** pp_Docs);
 tDocumento* RegistraPalavrasNoDocumentoAtual(tPalavra** pp_Palavras, int idx_doc, tDocumento* p_Doc);

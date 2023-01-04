@@ -15,11 +15,11 @@ tPalavra** Inicializa_Array_Palavra();
 tPalavra* Inicializa_Palavra(char str[], int qtd_docs);
 
 //leitura
-tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** pp_Palavras, int qtd_Arquivos);
+tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** pp_Palavras, int qtd_Arquivos, char argv[]);
 tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento);
 
 //arquivos
-FILE* Get_ArquivoNoticia(char caminho[]);
+FILE* Get_ArquivoNoticia(char caminho[], char argv[]);
 
 //impressao
 void Idx_Palavras(tPalavra** pp_Palavras);
@@ -39,6 +39,11 @@ void Insere_TF_IDF_em_Doc(double TF_IDF, int idx_doc, tPalavra *p_palavra);
 void Atualiza_Palavra_TF_IDF(tPalavra *p_palavra, int qtdDocumentos);
 int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocumentos);
 double Calcula_IDF(double n, double DF);
+
+//------arquivos binarios---------
+void ArmazenaPalavrasEmBinario(FILE* bin, tPalavra** pp_Palavras, int qtd_palavras);
+void Armazena_UMA_PalavraEmBinario(tPalavra* p_Palavra, FILE* bin);
+void LeDicionarioBinario(FILE *bin);
 
 //liberacao de palavras
 void LiberaPalavras(tPalavra **pp_Palavras);

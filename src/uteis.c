@@ -37,11 +37,16 @@ void ConfereEntradaValida(char entrada[]){
 
 void ResetaString(char str[]){
     int i = 0;
-    for(i=0; i<strlen(str); i++){
+    for(i=0; i< (strlen(str)); i++){
         str[i] = '\0';
     }
 }
-
+void ResetaStrComTam(char str[], int tam){
+    int i = 0;
+    for(i=0; i< tam; i++){
+        str[i] = '\0';
+    }
+ }
 
 //----------------dispatch_table_Get_Or_Set -------------
 
@@ -131,4 +136,20 @@ char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx){
     }
     str = lista_tipos[idx];
     return str;
+}
+
+
+
+//novas
+
+int ConfereTxt(char str[]){
+    int i = 0, tam = 0;
+    tam = strlen(str);
+
+    for(i = 0; i < tam; i++){
+        if(str[i] == '.'){
+            return 1;
+        }
+    }
+    return 0;
 }
