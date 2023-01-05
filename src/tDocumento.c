@@ -133,7 +133,8 @@ void Armazena_UM_DocumentoEmBinario(tDocumento* p_Doc, FILE* bin){
 }
 
 //====leitura
-void LeDocsBinario(FILE *bin){
+tDocumento** LeDocsBinario(FILE *bin){
+    tDocumento** pp_Docs = NULL;
     int qtdDocs = 0;
     char nome[100];
     char tipo[10];
@@ -143,12 +144,13 @@ void LeDocsBinario(FILE *bin){
     int tamNome = 0, tamTipo = 0;
     int i = 0, j = 0, k = 0;
     
-    
     fread(&qtdDocs, sizeof(int), 1, bin);
-
+    pp_Docs = malloc(sizeof(tDocumento*) * qtdDocs);
+    Get_Or_Set_Valor('d', "set", qtdDocs);
+    
     for(i = 0; i < qtdDocs; i++){
         ResetaStrComTam(nome, 100);
-
+        ResetaStrComTam(tipo, 10);
         //qtd palavras
         fread(&qtd_palavras, sizeof(int), 1, bin);
         //nome
@@ -163,19 +165,31 @@ void LeDocsBinario(FILE *bin){
         idx_palavras = malloc(sizeof(int)*qtd_palavras);
         fread(idx_palavras, sizeof(int), qtd_palavras, bin);
 
+        // montando struct
+        pp_Docs[i] = malloc(sizeof(tDocumento));
+        pp_Docs[i]->idx = i;
+        strcpy(pp_Docs[i]->nome_documento, nome);
+        strcpy(pp_Docs[i]->tipo, tipo);
+        pp_Docs[i]->qtd_palavras_contidas = qtd_palavras;
+        pp_Docs[i]->idx_palavras = malloc(sizeof(int)*qtd_palavras);
 
-        //printf("\n            qtd docs: %d\n", qtdDocs);
+        
+        /*
+        ==== MANTIDO PARA EXIBIR SAIDAS DO PROG 1 ====
+
+        printf("\n            qtd docs: %d\n", qtdDocs);
         printf("doc[%d] qtd_palavras: %d tamanho nome: %d nome: %s tamanho tipo: %d tipo: %s \n", idx_doc, qtd_palavras, tamNome, nome, tamTipo, tipo);
-        printf("indice palavras: ");
+        printf("indice palavras: ");*/
         for(j = 0; j < qtd_palavras; j++){
-            printf("%d ", idx_palavras[j]);
+            //printf("%d ", idx_palavras[j]);
+            pp_Docs[i]->idx_palavras[j] = idx_palavras[j];
         }
-        printf("\n\n\n");
+        //printf("\n\n\n");
         free(idx_palavras);
     }
+
+    return pp_Docs;
 }
-
-
 
 //-----liberar memoria--------
 void LiberaDocs(tDocumento** pp_Docs){
@@ -186,4 +200,22 @@ void LiberaDocs(tDocumento** pp_Docs){
         free(pp_Docs[i]);
     }
     free(pp_Docs);
+}
+
+
+//novas
+
+void Teste_ImprimeDocumentos(tDocumento **pp_Docs){
+    int qtd_Docs = 0, iDoc = 0;
+    qtd_Docs = Get_Or_Set_Valor('d', "get", null);
+    int iPalavra = 0;
+    
+    for(iDoc = 0; iDoc < qtd_Docs; iDoc++){
+        printf("doc[%d] qtd_palavras: %d nome: %s tipo: %s \n", pp_Docs[iDoc]->idx, pp_Docs[iDoc]->qtd_palavras_contidas, pp_Docs[iDoc]->nome_documento, pp_Docs[iDoc]->tipo);
+        printf("palavras contidas: ");
+        for(iPalavra = 0; iPalavra < (pp_Docs[iDoc]->qtd_palavras_contidas); iPalavra++){
+            printf("%d ", pp_Docs[iDoc]->idx_palavras[iPalavra]);
+        }
+        printf("\n\n");
+    }
 }

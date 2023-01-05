@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
         printf("ex:  ./indice data/train.txt  indice.bin\n");
         exit(0);
     }
-    ConfereEntradaValida(argv[1]);
+    ConfereEntradaValida(argv[1], "r");
     char entrada[100] = "";
     char saida[100] = "";
     strcpy(entrada, argv[1]);    
@@ -51,28 +51,18 @@ int main(int argc, char *argv[]){
     
 
     //armazena em binario
-    system("mkdir ArquivosBinarios");
-    FILE *fPalavrasBin = fopen("ArquivosBinarios/dicionario.bin", "wb");
-    FILE *fDocumentosBin = fopen("ArquivosBinarios/docs.bin", "wb");
-    if (fPalavrasBin == NULL || fDocumentosBin == NULL){
+    FILE *fBin = fopen(saida, "wb");
+    if (fBin == NULL || fBin == NULL){
         printf("Erro! o documento binario nao foi inicializado com sucesso!\n");
         exit(EXIT_FAILURE);
     }
 
-    ArmazenaDocumentosEmBinario(fDocumentosBin, pp_Docs, qtd_Arquivos);
-    ArmazenaPalavrasEmBinario(fPalavrasBin, pp_Palavras, Get_Or_Set_Valor('p', "get", null));
-    fclose(fDocumentosBin);
-    fclose(fPalavrasBin);
-    
-    //imprime em binario
-    fDocumentosBin = fopen("ArquivosBinarios/docs.bin", "rb");
-    fPalavrasBin = fopen("ArquivosBinarios/dicionario.bin", "rb");
+    ArmazenaDocumentosEmBinario(fBin, pp_Docs, qtd_Arquivos);
+    fclose(fBin);
 
-    LeDocsBinario(fDocumentosBin); // vazamento de memoria
-    LeDicionarioBinario(fPalavrasBin); // vazamento de memoria
-
-    fclose(fDocumentosBin);
-    fclose(fPalavrasBin);
+    fBin = fopen(saida, "ab");
+    ArmazenaPalavrasEmBinario(fBin, pp_Palavras, Get_Or_Set_Valor('p', "get", null));
+    fclose(fBin);
     
     //frees
     LiberaPalavras(pp_Palavras);
@@ -81,6 +71,3 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-
-
-// 1. Arquivo binario em um unico

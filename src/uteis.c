@@ -25,15 +25,17 @@ int LeQuantidadeDeArquivos(FILE* fArquivo_caminho_noticias){
 
 }
 
-void ConfereEntradaValida(char entrada[]){
-    FILE *fteste = fopen(entrada, "r");
+void ConfereEntradaValida(char entrada[], char modo[]){
+    FILE *fteste = fopen(entrada, modo);
     if(!(fteste)){
-        printf("ERRO: diretorio inexistente\n");
-        printf("ex:  ./indice data/train.txt  indice.bin\n");
+        printf("ERRO: nao foi possivel abrir o arquivo\n");
+        printf("programa 1) ex:  ./exe1 data/train.txt  indice.bin\n");
+        printf("programa 2) ex: ./exe2 ArquivosBinarios/indice.bin K\n");
         exit(EXIT_FAILURE);
     }
     fclose(fteste);
 }
+
 
 void ResetaString(char str[]){
     int i = 0;

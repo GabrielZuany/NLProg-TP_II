@@ -8,7 +8,7 @@
 typedef int (*Vetor_Get_or_Set_fn)(char acao[], int valor);
 
 int LeQuantidadeDeArquivos(FILE* fArquivo_caminho_noticias);
-void ConfereEntradaValida(char entrada[]);
+void ConfereEntradaValida(char entrada[], char modo[]);
 void ResetaString(char str[]);
 void ResetaStrComTam(char str[], int tam);
 void Dispatch_table_Get_Set_inicializa();

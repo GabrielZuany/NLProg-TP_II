@@ -24,6 +24,7 @@ FILE* Get_ArquivoNoticia(char caminho[], char argv[]);
 //impressao
 void Idx_Palavras(tPalavra** pp_Palavras);
 void ImprimePalavra(tPalavra* p_palavra);
+void Teste_ImprimePalavras(tPalavra **pp_Palavras);
 
 //auxiliares 
 void ResetaString(char str[]);
@@ -43,12 +44,10 @@ double Calcula_IDF(double n, double DF);
 //------arquivos binarios---------
 void ArmazenaPalavrasEmBinario(FILE* bin, tPalavra** pp_Palavras, int qtd_palavras);
 void Armazena_UMA_PalavraEmBinario(tPalavra* p_Palavra, FILE* bin);
-void LeDicionarioBinario(FILE *bin);
+tPalavra** LeDicionarioBinario(FILE *bin);
 
 //liberacao de palavras
 void LiberaPalavras(tPalavra **pp_Palavras);
-
-
 
 
 
