@@ -8,31 +8,6 @@ struct tDocumento{
     int qtd_palavras_contidas;
 };
 
-
-//------- PROGRAMA 1 -----------
-void Idx_Documentos(tDocumento** pp_Docs, tPalavra** pp_Palavras){
-    int qtd_palavra = Get_Or_Set_Valor('p', "get", null);
-    int qtd_docs = Get_Or_Set_Valor('d', "get", null);
-    int idx_doc, idx_palavra, frequencia = 0;
-
-    for(idx_doc = 0; idx_doc< qtd_docs; idx_doc++){
-        printf("\n\n---------------------------------------------------------------\n\n");
-        printf("Palavras no doc idx [%d] '%s'\n", idx_doc, pp_Docs[idx_doc]->nome_documento);
-        printf("Tipo de noticia: %s\n\n=================\n\n", pp_Docs[idx_doc]->tipo);
-
-        for(idx_palavra = 0; idx_palavra < pp_Docs[idx_doc]->qtd_palavras_contidas; idx_palavra++){
-            
-            frequencia = RetornaFrequenciaPalavra(pp_Palavras[(pp_Docs[idx_doc]->idx_palavras[idx_palavra])] , idx_doc);
-            printf("Palavra: ");
-            ImprimePalavra(pp_Palavras[(pp_Docs[idx_doc]->idx_palavras[idx_palavra])]);
-            printf("\nFrequencia: %d\n\n", frequencia);
-
-        }
-    }
-}
-
-
-
 //------inicializacao---------
 tDocumento** Inicializa_Array_Docs(int qtd_docs){
     tDocumento** pp_Docs = NULL;
@@ -208,21 +183,22 @@ int Cmp_Idx_Docs(const void *p1, const void *p2){
 }
 
 void RelatorioDocumento(tDocumento** pp_Docs){
-    int i = 0;
+    int i = 0, j = 0;
     int qtd_docs = Get_Or_Set_Valor('d', "get", null);
     int inicio_max = qtd_docs - 10;
     
     qsort(pp_Docs, qtd_docs, sizeof(tDocumento*), Cmp_Qtd_Palavras);
     
     //imprimir os 10 maiores
-    printf("Impressao 10 maiores documentos:\n\n");
-    for(i = qtd_docs-1; i >= (qtd_docs-10); i--){
-        printf("Doc[%d]: qtd_Palavras: %d\n---\n", i, pp_Docs[i]->qtd_palavras_contidas);
+    printf("    Impressao 10 maiores documentos:\n");
+    for(i = qtd_docs-1, j = 1; i >= (qtd_docs-10); i--, j++){
+        printf("top %d: documento %d com %d palavras\n", j, pp_Docs[i]->idx, pp_Docs[i]->qtd_palavras_contidas);
     }
     //imprimir os 10 menores
-    printf("Impressao 10 menores documentos:\n\n");
-    for(i=0; i<10; i++){
-        printf("Doc[%d]: qtd_Palavras: %d\n---\n", i, pp_Docs[i]->qtd_palavras_contidas);
+    printf("\n");
+    printf("    Impressao 10 menores documentos:\n");
+    for(i=0, j = 1; i<10; i++, j++){
+        printf("top %d: documento %d com %d palavras\n", j, pp_Docs[i]->idx, pp_Docs[i]->qtd_palavras_contidas);
     }
     
     qsort(pp_Docs, qtd_docs, sizeof(tDocumento*), Cmp_Idx_Docs);
@@ -230,7 +206,6 @@ void RelatorioDocumento(tDocumento** pp_Docs){
 
 
 //============novas
-
 void Teste_ImprimeDocumentos(tDocumento **pp_Docs){
     int qtd_Docs = 0, iDoc = 0;
     qtd_Docs = Get_Or_Set_Valor('d', "get", null);

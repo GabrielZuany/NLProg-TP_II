@@ -7,46 +7,39 @@ static Vetor_Get_or_Set_fn dispatch_table_Get_Or_Set[256];
 //--------opcao usuario
 void ExibeMenu(){
     printf("\n\n|====================== NL PROG ======================|\n\n");
-    printf("[1] Buscar\n[2] Classificar\n[3] Relatorio dicionario\n[4] Relatorio documentos\n");
+    printf("[0] Sair\n[1] Buscar\n[2] Classificar\n[3] Relatorio dicionario\n[4] Relatorio documentos\n");
     printf("[5] Imprime dicionario\n[6] Imprime documentos\n------\n>>> ");
 }
-
 
 void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao){
     
     switch (opcao){
     case 0:
+        //sair
         break;
     case 1:
         //Buscador
         break;
-        
     case 2:
         //Classificador
         break;
-
     case 3:
-        //RelatorioPalavra
+        RelatorioPalavra(pp_Palavras);
         break;
-
     case 4:
         RelatorioDocumento(pp_Docs);
         break;
-
     case 5:
         Teste_ImprimePalavras(pp_Palavras);
         break;
-
     case 6:
         Teste_ImprimeDocumentos(pp_Docs);
         break;
-    
     default:
         printf("opcao invalida!\n");
         break;
     }    
 }
-
 
 int LeQuantidadeDeArquivos(FILE* fArquivo_caminho_noticias){
     if(fArquivo_caminho_noticias == NULL){
@@ -81,13 +74,13 @@ void ConfereEntradaValida(char entrada[], char modo[]){
     fclose(fteste);
 }
 
-
 void ResetaString(char str[]){
     int i = 0;
     for(i=0; i< (strlen(str)); i++){
         str[i] = '\0';
     }
 }
+
 void ResetaStrComTam(char str[], int tam){
     int i = 0;
     for(i=0; i< tam; i++){
@@ -184,8 +177,6 @@ char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx){
     str = lista_tipos[idx];
     return str;
 }
-
-
 
 //novas
 
