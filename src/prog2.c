@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "../lib/uteis.h"
-#include "../lib/tPalavra.h"
-#include "../lib/tDocumento.h"
+#include "../lib/lib.h"
 
 int main(int argc, char *argv[]){
     printf("entramos prog2");
@@ -38,8 +33,17 @@ int main(int argc, char *argv[]){
 
 
     //impressao
-    //Teste_ImprimeDocumentos(pp_Docs);
+    Teste_ImprimeDocumentos(pp_Docs);
     //Teste_ImprimePalavras(pp_Palavras);
+
+    int opcao = 0;    
+    do{
+        ExibeMenu();
+        scanf("%d",&opcao);
+        scanf("%*c");
+        ExecutaOpcaoUsuario(pp_Docs, pp_Palavras, opcao);
+    }while(opcao != 0);
+
 
     LiberaDocs(pp_Docs);
     LiberaPalavras(pp_Palavras);
@@ -50,24 +54,9 @@ int main(int argc, char *argv[]){
 
 /*
 1. salvar as structs .....................................ok
-x. switch opcao...........................................
-2. relatorio documento....................................
+x. switch opcao...........................................ok
+2. relatorio documento....................................ok
 3. relatorio dicionario...................................
 4. Buscar ................................................
 5. Classificar............................................
-
-pp_Copia_pp_docs = CriaCopiaDocumentos(pp_Docs);
-ImprimeDocumentos(pp_Copia_pp_docs);
-LiberaDocumentos(pp_Copia_pp_docs);
-
-
-Relatório de Documentos: Exibe os 10 documentos mais longos e os 10 mais curtos com o número de palavras e as
- respectivas classes. As listas devem ser ordenadas, a primeira do maior para o menor e a segunda do menor para o
-  maior. A ordenação deve ser feita ao selecionar a opção usando a função qsort.
-
-tDocumento **pp_docs
-copia_pp_docs = pp_docs
-
-qsort(copia_pp_docs, qtd_palavras_no_doc)
-
 */

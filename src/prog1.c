@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "../lib/uteis.h"
-#include "../lib/tPalavra.h"
-#include "../lib/tDocumento.h"
+#include "../lib/lib.h"
 
 
 int main(int argc, char *argv[]){

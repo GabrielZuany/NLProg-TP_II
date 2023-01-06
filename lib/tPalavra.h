@@ -1,12 +1,7 @@
 #ifndef _TPALAVRA_H_
 #define _TPALAVRA_H_
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "uteis.h"
-#define null 0
-#define TRUE 1
-#define FALSE 0
+#include "lib.h"
+
 
 typedef struct tPalavra tPalavra;
 

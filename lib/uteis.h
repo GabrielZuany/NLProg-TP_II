@@ -1,11 +1,10 @@
 #ifndef _TUTEIS_H_
 #define _TUTEIS_H_
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#define null 0
+#include "lib.h"
 typedef int (*Vetor_Get_or_Set_fn)(char acao[], int valor);
+
+void ExibeMenu();
+void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao);
 
 int LeQuantidadeDeArquivos(FILE* fArquivo_caminho_noticias);
 void ConfereEntradaValida(char entrada[], char modo[]);

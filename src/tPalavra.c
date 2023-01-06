@@ -1,4 +1,4 @@
-#include "../lib/tPalavra.h"
+#include "../lib/lib.h"
 
 struct tPalavra{
     char palavra[50];

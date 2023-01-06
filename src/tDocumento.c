@@ -1,4 +1,4 @@
-#include "../lib/tDocumento.h"
+#include "../lib/lib.h"
 
 struct tDocumento{
     char nome_documento[100];
@@ -173,18 +173,9 @@ tDocumento** LeDocsBinario(FILE *bin){
         pp_Docs[i]->qtd_palavras_contidas = qtd_palavras;
         pp_Docs[i]->idx_palavras = malloc(sizeof(int)*qtd_palavras);
 
-        
-        /*
-        ==== MANTIDO PARA EXIBIR SAIDAS DO PROG 1 ====
-
-        printf("\n            qtd docs: %d\n", qtdDocs);
-        printf("doc[%d] qtd_palavras: %d tamanho nome: %d nome: %s tamanho tipo: %d tipo: %s \n", idx_doc, qtd_palavras, tamNome, nome, tamTipo, tipo);
-        printf("indice palavras: ");*/
         for(j = 0; j < qtd_palavras; j++){
-            //printf("%d ", idx_palavras[j]);
             pp_Docs[i]->idx_palavras[j] = idx_palavras[j];
         }
-        //printf("\n\n\n");
         free(idx_palavras);
     }
 
@@ -203,7 +194,42 @@ void LiberaDocs(tDocumento** pp_Docs){
 }
 
 
-//novas
+//=============relatorio documento
+int Cmp_Qtd_Palavras(const void *p1, const void *p2){
+    tDocumento *d1 = *(tDocumento**)p1;
+    tDocumento *d2 = *(tDocumento**)p2;
+    return (d1->qtd_palavras_contidas - d2->qtd_palavras_contidas);
+}
+
+int Cmp_Idx_Docs(const void *p1, const void *p2){
+    tDocumento* d1 = *(tDocumento**)p1;
+    tDocumento* d2 = *(tDocumento**)p2;
+    return (d1->idx) - (d2->idx);
+}
+
+void RelatorioDocumento(tDocumento** pp_Docs){
+    int i = 0;
+    int qtd_docs = Get_Or_Set_Valor('d', "get", null);
+    int inicio_max = qtd_docs - 10;
+    
+    qsort(pp_Docs, qtd_docs, sizeof(tDocumento*), Cmp_Qtd_Palavras);
+    
+    //imprimir os 10 maiores
+    printf("Impressao 10 maiores documentos:\n\n");
+    for(i = qtd_docs-1; i >= (qtd_docs-10); i--){
+        printf("Doc[%d]: qtd_Palavras: %d\n---\n", i, pp_Docs[i]->qtd_palavras_contidas);
+    }
+    //imprimir os 10 menores
+    printf("Impressao 10 menores documentos:\n\n");
+    for(i=0; i<10; i++){
+        printf("Doc[%d]: qtd_Palavras: %d\n---\n", i, pp_Docs[i]->qtd_palavras_contidas);
+    }
+    
+    qsort(pp_Docs, qtd_docs, sizeof(tDocumento*), Cmp_Idx_Docs);
+}
+
+
+//============novas
 
 void Teste_ImprimeDocumentos(tDocumento **pp_Docs){
     int qtd_Docs = 0, iDoc = 0;

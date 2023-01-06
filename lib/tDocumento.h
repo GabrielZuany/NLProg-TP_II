@@ -1,11 +1,6 @@
 #ifndef _TDOCUMENTO_H_
 #define _TDOCUMENTO_H_
-#define null 0
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "../lib/tPalavra.h"
-#include "../lib/uteis.h"
+#include "lib.h"
 
 typedef struct tDocumento tDocumento;
 
@@ -33,5 +28,10 @@ void Teste_ImprimeDocumentos(tDocumento **pp_Docs);
 
 //-----liberar memoria-------
 void LiberaDocs(tDocumento** pp_Docs);
+
+//------relatório documentos------
+void RelatorioDocumento(tDocumento** pp_Docs);
+//int Cmp_Idx_Docs(const void *p1, const void *p2);
+int Cmp_Qtd_Palavras(const void *p1, const void *p2);
 
 #endif

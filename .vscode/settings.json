@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "*.tcc": "c"
+        "*.tcc": "c",
+        "tdocumento.h": "c",
+        "tpalavra.h": "c",
+        "limits": "c"
     }
 }
