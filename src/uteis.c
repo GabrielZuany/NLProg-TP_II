@@ -24,7 +24,7 @@ void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao
         //Classificador
         break;
     case 3:
-        RelatorioPalavra(pp_Palavras);
+        RelatorioPalavra(pp_Palavras, pp_Docs);
         break;
     case 4:
         RelatorioDocumento(pp_Docs);
@@ -118,6 +118,21 @@ int Get_Set_QuantidadeDocumento(char acao[], int valor){
     return total_Documentos;
 }
 
+int Get_Set_QuantidadeGeneros(char acao[], int valor){
+    static int total_Generos = 0;
+
+    if(strcmp(acao, "set") == 0){
+        total_Generos = valor;
+    }else if(strcmp(acao, "get") == 0){
+        total_Generos = total_Generos;
+    }else{
+        printf("ERRO: '%s' eh um comando nao existente.\n=> Comandos validos: 'get', 'set'\n", acao);
+        exit(EXIT_FAILURE);
+    }
+    return total_Generos;
+
+}
+
 void Dispatch_table_Get_Set_inicializa(){
     for (int i = 0; i < 256; i++){
         dispatch_table_Get_Or_Set[i] = NULL;
@@ -125,6 +140,8 @@ void Dispatch_table_Get_Set_inicializa(){
     }   
     dispatch_table_Get_Or_Set['d'] = Get_Set_QuantidadeDocumento; //d = documento
     dispatch_table_Get_Or_Set['p'] = Get_Set_QuantidadePalavras; // p = palavra
+    dispatch_table_Get_Or_Set['g'] = Get_Set_QuantidadeGeneros; // p = palavra
+
 }
 
 static void Dispatch_table_executa(char dado, char acao[], int valor){
@@ -180,7 +197,35 @@ char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx){
 
 //novas
 
+int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc){
+    int i = 0, existe = 0, qtd_generos = 0;
+    qtd_generos = Get_Or_Set_Valor('g', "get", null);
+
+    for(i = 0; i < idx_doc; i++){
+        if (strcmp(pp_auxGenero[i], tipo) == 0){
+            existe = 1;
+            return 1;
+        }
+    }
+    if (!existe){
+        Get_Or_Set_Valor('g', "set", qtd_generos+1);
+    }
+    return 0;
+    printf("\n");
+}
+
+void ArmazenaAuxiliaresEmBinario(FILE * bin, int qtd_Generos){
+    fwrite(&qtd_Generos, sizeof(int), 1, bin);
+}
+
+void LeAuxiliaresBinario(FILE * bin){
+    int qtd_generos = 0;
+    fread(&qtd_generos, sizeof(int), 1, bin);
+    Get_Or_Set_Valor('g', "set", qtd_generos);
+}
+
 int ConfereTxt(char str[]){
+
     int i = 0, tam = 0;
     tam = strlen(str);
 
@@ -190,4 +235,84 @@ int ConfereTxt(char str[]){
         }
     }
     return 0;
+}
+
+void RelatorioPalavra(tPalavra **pp_Palavras, tDocumento **pp_Docs){
+    char nome[100];
+    int idx_palavra = -1, qtd_docs = 0, qtd_docs_presente = 0;
+    qtd_docs = Get_Or_Set_Valor('d', "get", null);
+    printf("digite uma palavra: ");
+    scanf("%s", nome);
+    scanf("%*c");
+
+    //garante que a palavra sera valida e ja sai com o indice dela no array
+    while (TRUE){
+        idx_palavra = VerificaPalavraExiste(pp_Palavras, nome);
+        if(idx_palavra != -1){
+            break;
+        }
+        ResetaStrComTam(nome, 100);
+        printf("nome invalido!, digite outro: ");
+        scanf("%s", nome);
+        scanf("%*c");
+    }
+    //ImprimePalavra(pp_Palavras[idx_palavra]);
+    qtd_docs_presente = Calcula_EmQuantosDocumentosEstaPresente(pp_Palavras[idx_palavra], qtd_docs);
+    /*
+    printf("\nnumero de documentos com a palavra: %d\n", qtd_docs_presente);
+    printf("----------------------------------------------\n");
+
+    RelatorioPalavra_frequencia(pp_Palavras, qtd_docs, idx_palavra);
+    printf("----------------------------------------------\n");
+    */
+    RelatorioPalavra_genero(pp_Palavras, pp_Docs, Get_Or_Set_Valor('g', "get", null));
+
+}
+
+void RelatorioPalavra_genero(tPalavra **pp_Palavras, tDocumento **pp_Docs, int qtd_generos){
+    int i = 0, qtd_Docs = 0, iNovoGenero = 0;
+    char **pp_TodosGeneros;
+    char **pp_UnicoGeneros;
+    char genero[5] = "";
+
+    qtd_Docs = Get_Or_Set_Valor('d', "get", null);
+
+    //iniclizaza generos auxiliares
+    pp_UnicoGeneros = malloc(sizeof(char*) * qtd_generos);
+    pp_TodosGeneros = malloc(sizeof(char*) * qtd_Docs);
+
+
+    //armazeno no pp_UnicoGenero os generos sem repeticao
+    for(i = 0; i < qtd_Docs; i++){
+        ResetaStrComTam(genero, 5);
+        pp_TodosGeneros[i] = Get_GeneroArquivo(pp_Docs[i]);
+        strcpy(genero, pp_TodosGeneros[i]);
+        iNovoGenero = Armazena_Genero_Array(pp_TodosGeneros, pp_UnicoGeneros, genero, i, iNovoGenero);
+    }
+
+    for(i = 0; i < qtd_generos; i++){
+        printf("%s \n", pp_UnicoGeneros[i]);
+    }
+
+
+
+
+    //a liberacao eh feita assim pq passei os ponteiros salvos no pp_TodosGeneros para o pp_UnicoGenero
+    LiberaAuxGenero(pp_TodosGeneros, qtd_Docs);
+    free(pp_UnicoGeneros);
+}
+
+int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char genero[], int idx_Docs, int iNovoGenero){
+    int i = 0, existe = 0;
+    for(i = 0; i < idx_Docs; i++){
+        if (strcmp(pp_TodosGeneros[i], genero) == 0){
+            existe = 1;
+            break;
+        }
+    }
+    if(!existe){
+        pp_UnicoGeneros[iNovoGenero] = pp_TodosGeneros[i];
+        iNovoGenero++;
+    }
+    return iNovoGenero;
 }

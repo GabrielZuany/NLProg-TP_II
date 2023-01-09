@@ -365,35 +365,8 @@ void Teste_ImprimePalavras(tPalavra **pp_Palavras){
 }
 
 //===============Relatorio===============
-void RelatorioPalavra(tPalavra **pp_Palavras){
-    char nome[100];
-    int idx_palavra = -1, qtd_docs = 0, qtd_docs_presente = 0;
-    qtd_docs = Get_Or_Set_Valor('d', "get", null);
-    printf("digite uma palavra: ");
-    scanf("%s", nome);
-    scanf("%*c");
 
-    //garante que a palavra sera valida e ja sai com o indice dela no array
-    while (TRUE){
-        idx_palavra = VerificaPalavraExiste(pp_Palavras, nome);
-        if(idx_palavra != -1){
-            break;
-        }
-        ResetaStrComTam(nome, 100);
-        printf("nome invalido!, digite outro: ");
-        scanf("%s", nome);
-        scanf("%*c");
-    }
-    //ImprimePalavra(pp_Palavras[idx_palavra]);
-    qtd_docs_presente = Calcula_EmQuantosDocumentosEstaPresente(pp_Palavras[idx_palavra], qtd_docs);
 
-    printf("\nnumero de documentos com a palavra: %d\n", qtd_docs_presente);
-    printf("----------------------------------------------\n");
-
-    RelatorioPalavra_frequencia(pp_Palavras, qtd_docs, idx_palavra);
-    printf("----------------------------------------------\n");
-
-}
 
 void RelatorioPalavra_frequencia(tPalavra **pp_Palavras, int qtd_docs, int idx_palavra){
     int idx_doc = 0;

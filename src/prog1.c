@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
     Dispatch_table_Get_Set_inicializa();
     Get_Or_Set_Valor('d', "set", 0);
     Get_Or_Set_Valor('p', "set", 0);
+    Get_Or_Set_Valor('g', "set", 0);
     
     //le quantidade de documentos
     FILE *fArquivo_caminho_noticias = fopen(entrada, "r");
@@ -53,9 +54,15 @@ int main(int argc, char *argv[]){
     fBin = fopen(saida, "ab");
     ArmazenaPalavrasEmBinario(fBin, pp_Palavras, Get_Or_Set_Valor('p', "get", null));
     fclose(fBin);
+
+    fBin = fopen(saida, "ab");
+    ArmazenaAuxiliaresEmBinario(fBin, Get_Or_Set_Valor('g', "get", null));
+    fclose(fBin);
     
     //Teste_ImprimePalavras(pp_Palavras);
+    //Teste_ImprimeDocumentos(pp_Docs);
     //frees
+    
     LiberaPalavras(pp_Palavras);
     LiberaDocs(pp_Docs);
     printf("programa encerrado com sucesso!\n");

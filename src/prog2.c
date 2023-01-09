@@ -18,6 +18,7 @@ int main(int argc, char *argv[]){
     Dispatch_table_Get_Set_inicializa();
     Get_Or_Set_Valor('d', "set", 0);
     Get_Or_Set_Valor('p', "set", 0);
+    Get_Or_Set_Valor('g', "set", 0);
 
     //-------LEITURA
     //--LeDocumentos
@@ -29,12 +30,15 @@ int main(int argc, char *argv[]){
     //--LePalavras
     tPalavra **pp_Palavras = NULL;
     pp_Palavras = LeDicionarioBinario(fBin);
-    fclose(fBin);
 
+    //--LeAuxiliares;
+    LeAuxiliaresBinario(fBin);
+    fclose(fBin);
 
     //impressao
     //Teste_ImprimeDocumentos(pp_Docs);
     //Teste_ImprimePalavras(pp_Palavras);
+    
 
     int opcao = 0;    
     do{
@@ -44,7 +48,10 @@ int main(int argc, char *argv[]){
         ExecutaOpcaoUsuario(pp_Docs, pp_Palavras, opcao);
     }while(opcao != 0);
 
-
+    //testes
+    //printf("qtd generos: %d\n", Get_Or_Set_Valor('g', "get", null));
+    
+    //liberacao
     LiberaDocs(pp_Docs);
     LiberaPalavras(pp_Palavras);
     printf("programa 2 encerrado com sucesso!\n");

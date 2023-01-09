@@ -33,15 +33,28 @@ tDocumento* Inicializa_Doc(tPalavra** pp_Palavras, char nome[], char tipo[], int
 //------registrar palavras e montar Struct-------
 tDocumento** RegistraPalavrasNosDocumentos(tPalavra** pp_Palavras, tDocumento** pp_Docs){
     int qtd_docs = Get_Or_Set_Valor('d', "get", null);
-    int idx_doc;
+    int idx_doc, i = 0;
     char* nome = NULL;
     char* tipo = NULL;
+    char **pp_auxGenero;
+    pp_auxGenero = malloc(sizeof(char*) * qtd_docs);
+    for(i = 0; i < qtd_docs; i++){
+        pp_auxGenero[i] = malloc(sizeof(char)*5);
+        ResetaStrComTam(pp_auxGenero[i], 5);
+    }
+
+
     for(idx_doc=0; idx_doc<qtd_docs; idx_doc++){
         nome = Get_Set_NomeArquivos("get", "", idx_doc);
         tipo = Get_Set_TipoNoticia("get", "", idx_doc);
+        strcpy(pp_auxGenero[idx_doc], tipo);
+        VerificaGeneroExiste(tipo, pp_auxGenero, idx_doc);
         pp_Docs[idx_doc] = Inicializa_Doc(pp_Palavras, nome, tipo, idx_doc);
         pp_Docs[idx_doc] = RegistraPalavrasNoDocumentoAtual(pp_Palavras, idx_doc, pp_Docs[idx_doc]);
     }
+
+    LiberaAuxGenero(pp_auxGenero, qtd_docs);
+
     return pp_Docs;
 }
 
@@ -71,6 +84,12 @@ char* Get_NomeArquivos(tDocumento** pp_Docs, int idx){
     return str;
 }
 
+char *Get_GeneroArquivo(tDocumento* p_Doc){
+    char *tipo;
+    tipo = malloc(sizeof(char) * 5);
+    strcpy(tipo, p_Doc->tipo);
+    return tipo;
+}
 
 //--------arquivo binario---------
 //====armazenamento
@@ -168,6 +187,13 @@ void LiberaDocs(tDocumento** pp_Docs){
     free(pp_Docs);
 }
 
+void LiberaAuxGenero(char **pp_auxGenero, int qtd){
+    int i = 0;
+    for(i = 0; i < qtd; i++){
+        free(pp_auxGenero[i]);
+    }
+    free(pp_auxGenero);
+}
 
 //=============relatorio documento
 int Cmp_Qtd_Palavras(const void *p1, const void *p2){
