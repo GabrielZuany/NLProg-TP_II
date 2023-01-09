@@ -46,11 +46,10 @@ tPalavra** LeDicionarioBinario(FILE *bin);
 void LiberaPalavras(tPalavra **pp_Palavras);
 
 //relatorio palavra
-void RelatorioPalavra(tPalavra **pp_Palavras);
+
 int Cmp_frequencia_Palavras(const void *p1, const void *p2);
 void RelatorioPalavra_frequencia(tPalavra **pp_Palavras, int qtd_docs, int idx_palavra);
 void ZeraPonteiroDeInteiro(int *p, int tam);
 int EncontraDocumentoComFrequenciaX(tPalavra *p_palavra, int frequencia, int *pAcessada, int qtd_docs);
-
 
 #endif

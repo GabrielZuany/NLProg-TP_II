@@ -13,6 +13,7 @@ tDocumento* Inicializa_Doc(tPalavra** pp_Palavras, char nome[], char tipo[], int
 
 //------auxiliares-------
 char* Get_NomeArquivos(tDocumento** pp_Docs, int idx);
+char *Get_GeneroArquivo(tDocumento* p_Doc);
 
 //-----------arquivo binario----------
 void ArmazenaDocumentosEmBinario(FILE* bin, tDocumento** pp_Docs, int qtd_Arquivos);
@@ -28,6 +29,7 @@ void Teste_ImprimeDocumentos(tDocumento **pp_Docs);
 
 //-----liberar memoria-------
 void LiberaDocs(tDocumento** pp_Docs);
+void LiberaAuxGenero(char **pp_auxGenero, int qtd);
 
 //------relatório documentos------
 void RelatorioDocumento(tDocumento** pp_Docs);

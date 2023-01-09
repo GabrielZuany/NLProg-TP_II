@@ -17,4 +17,10 @@ int Get_Or_Set_Valor(char dado, char acao[], int valor_registrar);
 char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx);
 char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx);
 int ConfereTxt(char str[]);
+void ArmazenaAuxiliaresEmBinario(FILE * bin, int qtd_Generos);
+void LeAuxiliaresBinario(FILE * bin);
+void RelatorioPalavra(tPalavra **pp_Palavras, tDocumento **pp_Docs);
+void RelatorioPalavra_genero(tPalavra **pp_Palavras, tDocumento **pp_Docs, int qtd_generos);
+int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc);
+int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char *p_genero, int idx_Docs, int iNovoGenero);
 #endif
