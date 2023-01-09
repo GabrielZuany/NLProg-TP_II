@@ -40,11 +40,6 @@ int main(int argc, char *argv[]){
     pp_Docs = Inicializa_Array_Docs(Get_Or_Set_Valor('d', "get", null));
     pp_Docs = RegistraPalavrasNosDocumentos(pp_Palavras, pp_Docs);
 
-    
-    //Idx_Documentos(pp_Docs, pp_Palavras);
-    //Idx_Palavras(pp_Palavras);
-    
-
     //armazena em binario
     FILE *fBin = fopen(saida, "wb");
     if (fBin == NULL || fBin == NULL){
@@ -59,6 +54,7 @@ int main(int argc, char *argv[]){
     ArmazenaPalavrasEmBinario(fBin, pp_Palavras, Get_Or_Set_Valor('p', "get", null));
     fclose(fBin);
     
+    //Teste_ImprimePalavras(pp_Palavras);
     //frees
     LiberaPalavras(pp_Palavras);
     LiberaDocs(pp_Docs);

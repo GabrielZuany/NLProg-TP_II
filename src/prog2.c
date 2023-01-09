@@ -1,7 +1,7 @@
 #include "../lib/lib.h"
 
 int main(int argc, char *argv[]){
-    printf("entramos prog2");
+    printf("entramos prog2\n");
     // input: ./prog2 indice.bin K
     //prepara e confere os diretorios
     if(argc <= 1){
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
 
 
     //impressao
-    Teste_ImprimeDocumentos(pp_Docs);
+    //Teste_ImprimeDocumentos(pp_Docs);
     //Teste_ImprimePalavras(pp_Palavras);
 
     int opcao = 0;    
@@ -51,6 +51,8 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
+
+//falta imprimir umas saidas do prog1
 
 /*
 1. salvar as structs .....................................ok

@@ -4,9 +4,10 @@ struct tPalavra{
     char palavra[50];
     int *pFrenquencia;
     double *pTF_IDF;
+    int idx;
 };
 
-//----PROGRAMA 1-----
+//===============PROGRAMA 1===============
 void Idx_Palavras(tPalavra** pp_Palavras){
     int i = 0, j = 0;
     int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
@@ -20,10 +21,8 @@ void Idx_Palavras(tPalavra** pp_Palavras){
         printf("\n");
     }
 }
-//---------------
 
-
-//leitura
+//===============leitura===============
 tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** pp_Palavras, int qtd_Arquivos, char argv[]){
     int i = 0;
     char linha[100000];
@@ -50,6 +49,7 @@ tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** 
 
 tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
     char str[50];
+    //acho q n precisa ser static
     static int idxPalavra = 0;
     tPalavra* p_palavra = NULL;
     int qtdDocumentos = 0, frequenciaNoDocumento = 0;
@@ -62,7 +62,7 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
         if(!(PalavraRegistrada(pp_Palavras, (idxPalavra), str))){
 
             pp_Palavras = (tPalavra**)realloc(pp_Palavras, sizeof(tPalavra*) * (idxPalavra + 2));
-            p_palavra = Inicializa_Palavra(str, qtdDocumentos);
+            p_palavra = Inicializa_Palavra(str, qtdDocumentos, idxPalavra);
             pp_Palavras[idxPalavra] = p_palavra;
             Insere_Frequencias_em_Doc(1, idxDocumento, pp_Palavras[idxPalavra]);
             idxPalavra++;
@@ -78,7 +78,7 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
     return pp_Palavras;
 }
 
-// --------relacionadas com arquivo diretorio--------
+//===============relacionadas com arquivo diretorio===============
 FILE* Get_ArquivoNoticia(char linha[], char argv[]){
     char diretorio[1000], temp[50], caminho[100], str[1000], argv_copy[100];
 
@@ -118,19 +118,20 @@ FILE* Get_ArquivoNoticia(char linha[], char argv[]){
     return fArquivo;
 }
 
-// --------------inicializacao de ponteiro ----------
+// ===============inicializacao de ponteiro===============
 tPalavra** Inicializa_Array_Palavra(){
     tPalavra** pp_Palavras = NULL;
     pp_Palavras = (tPalavra**)malloc(sizeof(tPalavra*));
     return pp_Palavras;
 }
 
-tPalavra* Inicializa_Palavra(char str[], int qtd_docs){
+tPalavra* Inicializa_Palavra(char str[], int qtd_docs, int idxPalavra){
     tPalavra* p_palavra = malloc(sizeof(tPalavra));
     p_palavra->pFrenquencia = malloc(sizeof(int) * qtd_docs);
     p_palavra->pTF_IDF = malloc(sizeof(double) * qtd_docs);
-    strcpy(p_palavra->palavra, str);
 
+    strcpy(p_palavra->palavra, str);
+    p_palavra->idx = idxPalavra;
     int i = 0;
     for(i=0; i<qtd_docs; i++){
         Insere_Frequencias_em_Doc(0, i, p_palavra);
@@ -140,7 +141,7 @@ tPalavra* Inicializa_Palavra(char str[], int qtd_docs){
     return p_palavra;
 }
 
-// -----------------auxiliares----------------------
+// ===============auxiliares===============
 int ComparaPalavras(const void *p1, const void *p2){
     const struct tPalavra *palavra1 = p1;
     const struct tPalavra *palavra2 = p2;
@@ -186,14 +187,20 @@ int Get_Qtd_Palavras_No_Doc(tPalavra** pp_Palavras, int idx_doc){
 }
 
 void ImprimePalavra(tPalavra* p_palavra){
-    printf("%s", p_palavra->palavra);
+    int i = 0, qtdDocumentos = 0;
+    qtdDocumentos = Get_Or_Set_Valor('d', "get", null);
+
+    printf("    nome: %s\n", p_palavra->palavra);
+    for(i = 0; i < qtdDocumentos; i++){
+        printf("Doc[%d]: f = %d  tf-idf = %lf\n", i, p_palavra->pFrenquencia[i], p_palavra->pTF_IDF[i]);
+    }
 }
 
 int RetornaFrequenciaPalavra(tPalavra* p_palavra, int idx_doc){
     return p_palavra->pFrenquencia[idx_doc];
 }
 
-//-----------------calculo com palavras--------------------
+//===============calculo com palavras===============
 void Insere_Frequencias_em_Doc(int frequencia, int idx_doc, tPalavra* p_palavra){
     p_palavra->pFrenquencia[idx_doc] = frequencia;
 }
@@ -249,8 +256,8 @@ int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocument
 }
 
 
-//------------arquivos binarios------------
-//====armazenamento
+//===============arquivos binarios===============
+//-------armazenamento
 void ArmazenaPalavrasEmBinario(FILE* bin, tPalavra** pp_Palavras, int qtd_palavras){
     int i = 0;
     //qtd palavras
@@ -265,7 +272,7 @@ void Armazena_UMA_PalavraEmBinario(tPalavra* p_Palavra, FILE* bin){
     int tam_Palavra = strlen(p_Palavra->palavra);
     int tam_pFrequencia = Get_Or_Set_Valor('d', "get", null);
     
-    
+    fwrite(&(p_Palavra->idx), sizeof(int), 1, bin);
     fwrite(&tam_Palavra, sizeof(int), 1, bin);
     fwrite(p_Palavra->palavra, sizeof(char), tam_Palavra, bin);
     fwrite(&tam_pFrequencia, sizeof(int), 1, bin);
@@ -274,7 +281,7 @@ void Armazena_UMA_PalavraEmBinario(tPalavra* p_Palavra, FILE* bin){
 
 }
 
-//====leitura
+//------leitura
 tPalavra** LeDicionarioBinario(FILE *bin){    
     tPalavra** pp_Palavras = NULL;
     char palavra [50];
@@ -283,19 +290,17 @@ tPalavra** LeDicionarioBinario(FILE *bin){
     int qtd_palavras = 0;    
     int tam_palavra = 0;
     int tam_pFrequencia = 0;
+    int idx = 0;
 
-    //td palavras
     fread(&qtd_palavras, sizeof(int), 1, bin);
     Get_Or_Set_Valor('p', "set", qtd_palavras);
-    //printf("QTD PALAVRAS %d\n\n", qtd_palavras);
-
     pp_Palavras = malloc(sizeof(tPalavra*) * qtd_palavras);
 
-
     int i = 0, j = 0;
-    
     for(i = 0; i < qtd_palavras; i++){
         ResetaStrComTam(palavra, 50);
+        //idx
+        fread(&idx, sizeof(int), 1, bin);
         //palavra
         fread(&tam_palavra, sizeof(int), 1, bin);
         fread(palavra, sizeof(char), tam_palavra, bin);
@@ -309,23 +314,19 @@ tPalavra** LeDicionarioBinario(FILE *bin){
 
 
         pp_Palavras[i] = malloc(sizeof(tPalavra));
+
+        pp_Palavras[i]->idx = idx;
         strcpy(pp_Palavras[i]->palavra, palavra);
         pp_Palavras[i]->pFrenquencia = malloc(sizeof(int)*tam_pFrequencia);
         pp_Palavras[i]->pTF_IDF = malloc(sizeof(double)*tam_pFrequencia);
 
-        //printf("palavra[%d]:  tamStr: %d str: %s tamFrequencia: %d\n", i, tam_palavra, palavra, tam_pFrequencia);
-        //printf("frequencia: ");
+
         for(j=0; j<tam_pFrequencia; j++){
-            //printf("%d ", pFrenquencia[j]);
             pp_Palavras[i]->pFrenquencia[j] = pFrenquencia[j];
         }
-        //printf("\n");
-        //printf("TF-IDF ");
         for(j=0; j<tam_pFrequencia; j++){
-            //printf("%lf ", pTF_IDF[j]);
             pp_Palavras[i]->pTF_IDF[j] = pTF_IDF[j];
         }
-        //printf("\n\n");
 
         free(pFrenquencia);
         free(pTF_IDF);
@@ -333,9 +334,7 @@ tPalavra** LeDicionarioBinario(FILE *bin){
    return pp_Palavras;
 }   
 
-
-
-//--------------liberacao de memoria--------------
+//===============liberacao de memoria===============
 void LiberaPalavras(tPalavra **pp_Palavras){
     int qtdPalavras = 0, i = 0;
     qtdPalavras = Get_Or_Set_Valor('p', "get", null);
@@ -348,7 +347,7 @@ void LiberaPalavras(tPalavra **pp_Palavras){
     free(pp_Palavras);
 }
 
-//impressao
+//===============impressao===============
 void Teste_ImprimePalavras(tPalavra **pp_Palavras){
     int iPalavra = 0, qtdPalavras = 0, iFrequencia = 0, qtdDocs = 0;
     qtdDocs = Get_Or_Set_Valor('d', "get", null);
@@ -356,8 +355,7 @@ void Teste_ImprimePalavras(tPalavra **pp_Palavras){
    
     for(iPalavra = 0; iPalavra < qtdPalavras; iPalavra++){
         
-        printf("        Palavra: %s\n", pp_Palavras[iPalavra]->palavra);
-        
+        printf("        Palavra[%d]: %s\n", pp_Palavras[iPalavra]->idx ,pp_Palavras[iPalavra]->palavra);
         for(iFrequencia = 0; iFrequencia < qtdDocs; iFrequencia++){
             printf("\ndoc[%d] f: %d tf-idf: %lf", iFrequencia, pp_Palavras[iPalavra]->pFrenquencia[iFrequencia], pp_Palavras[iPalavra]->pTF_IDF[iFrequencia]);
         }
@@ -365,3 +363,99 @@ void Teste_ImprimePalavras(tPalavra **pp_Palavras){
         
     }   
 }
+
+//===============Relatorio===============
+void RelatorioPalavra(tPalavra **pp_Palavras){
+    char nome[100];
+    int idx_palavra = -1, qtd_docs = 0, qtd_docs_presente = 0;
+    qtd_docs = Get_Or_Set_Valor('d', "get", null);
+    printf("digite uma palavra: ");
+    scanf("%s", nome);
+    scanf("%*c");
+
+    //garante que a palavra sera valida e ja sai com o indice dela no array
+    while (TRUE){
+        idx_palavra = VerificaPalavraExiste(pp_Palavras, nome);
+        if(idx_palavra != -1){
+            break;
+        }
+        ResetaStrComTam(nome, 100);
+        printf("nome invalido!, digite outro: ");
+        scanf("%s", nome);
+        scanf("%*c");
+    }
+    //ImprimePalavra(pp_Palavras[idx_palavra]);
+    qtd_docs_presente = Calcula_EmQuantosDocumentosEstaPresente(pp_Palavras[idx_palavra], qtd_docs);
+
+    printf("\nnumero de documentos com a palavra: %d\n", qtd_docs_presente);
+    printf("----------------------------------------------\n");
+
+    RelatorioPalavra_frequencia(pp_Palavras, qtd_docs, idx_palavra);
+    printf("----------------------------------------------\n");
+
+}
+
+void RelatorioPalavra_frequencia(tPalavra **pp_Palavras, int qtd_docs, int idx_palavra){
+    int idx_doc = 0;
+
+    int *pAuxFrequencia = malloc(sizeof(int) * qtd_docs);
+    for(idx_doc = 0; idx_doc < qtd_docs; idx_doc++){
+        pAuxFrequencia[idx_doc] = pp_Palavras[idx_palavra]->pFrenquencia[idx_doc];
+    }
+    qsort(pAuxFrequencia, qtd_docs, sizeof(int), Cmp_frequencia_Palavras);
+
+    idx_doc = 0;
+    int i = 0;
+    int *pAcessada = malloc(sizeof(int)* qtd_docs);
+    ZeraPonteiroDeInteiro(pAcessada, qtd_docs);
+    printf("Impressao 10 documentos com maior frequencia:\n");
+    for(i = 0; i < 10; i++){
+        idx_doc = EncontraDocumentoComFrequenciaX(pp_Palavras[idx_palavra], pAuxFrequencia[i], pAcessada, qtd_docs);
+        printf("    top %d: documentos %d com frequencia %d\n", i+1,idx_doc,pAuxFrequencia[i]);
+    }
+    free(pAcessada);
+    free(pAuxFrequencia);
+
+}
+
+void ZeraPonteiroDeInteiro(int *p, int tam){
+    int i = 0;
+    for(i = 0; i < tam; i++){
+        p[i] = 0;
+    }
+}
+
+int EncontraDocumentoComFrequenciaX(tPalavra *p_palavra, int frequencia, int *pAcessada, int qtd_docs){
+    int i = 0;
+    for(i = 0; i < qtd_docs; i++){
+        if ((p_palavra->pFrenquencia[i] == frequencia) && (pAcessada[i] == 0)){
+            pAcessada[i] = 1;
+            return i;
+        }
+    }
+    printf("ERRO: frequencia %d nao encontrada\n", frequencia);
+    exit(0);
+}
+
+
+int Cmp_frequencia_Palavras(const void *p1, const void *p2){
+    int x1 = *(int*)p1;
+    int x2 = *(int*)p2;
+    return (x2 - x1);
+}
+
+//varre todas as palavras com strcmp
+int VerificaPalavraExiste(tPalavra **pp_Palavras, char nome[]){
+    int qtdPalavra = 0, i = 0, igual = 0;
+    qtdPalavra = Get_Or_Set_Valor('p', "get", null);
+    
+    for(i = 0; i < qtdPalavra; i++){
+        igual = strcmp(pp_Palavras[i]->palavra, nome);
+        if(igual == 0){
+            return pp_Palavras[i]->idx;
+        }
+    }
+    return -1;
+}
+
+
