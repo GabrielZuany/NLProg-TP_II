@@ -2,7 +2,6 @@
 
 
 int main(int argc, char *argv[]){
-    printf("\n");
     //prepara e confere os diretorios
     if(argc <= 1){
         printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
@@ -34,7 +33,6 @@ int main(int argc, char *argv[]){
     pp_Palavras = Inicializa_Array_Palavra();
     pp_Palavras = LeTodosOsArquivosPalavra(fArquivo_caminho_noticias, pp_Palavras, qtd_Arquivos, entrada);
     fclose(fArquivo_caminho_noticias);
-    printf("\n");
 
     //inicializa documentos
     tDocumento** pp_Docs = NULL;
@@ -61,8 +59,10 @@ int main(int argc, char *argv[]){
     
     //Teste_ImprimePalavras(pp_Palavras);
     //Teste_ImprimeDocumentos(pp_Docs);
+
+    printf("------\n-> Qtd documentos: %d\n-> Qtd palavras diferentes: %d\n-------\n", Get_Or_Set_Valor('d', "get", null), Get_Or_Set_Valor('p', "get", null));
+
     //frees
-    
     LiberaPalavras(pp_Palavras);
     LiberaDocs(pp_Docs);
     printf("programa encerrado com sucesso!\n");

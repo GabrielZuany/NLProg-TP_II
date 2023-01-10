@@ -432,3 +432,7 @@ int VerificaPalavraExiste(tPalavra **pp_Palavras, char nome[]){
 }
 
 
+
+int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos){
+    return p_Palavra->pFrenquencia[pos];
+}

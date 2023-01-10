@@ -52,4 +52,8 @@ void RelatorioPalavra_frequencia(tPalavra **pp_Palavras, int qtd_docs, int idx_p
 void ZeraPonteiroDeInteiro(int *p, int tam);
 int EncontraDocumentoComFrequenciaX(tPalavra *p_palavra, int frequencia, int *pAcessada, int qtd_docs);
 
+
+
+int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos);
+
 #endif
