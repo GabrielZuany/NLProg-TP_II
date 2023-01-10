@@ -20,7 +20,7 @@ exe1: compile1
 	@./$(PROG1) $(DiretorioEntrada) $(DiretorioBinario)
 
 vexe1: compile1
-	@valgrind -s ./$(PROG1) $(DiretorioEntrada) $(DiretorioBinario)
+	@valgrind --leak-check=full -s ./$(PROG1) $(DiretorioEntrada) $(DiretorioBinario)
 
 compile2:
 	@$(CC) -o $(PROG2) src/prog2.c $(pontosC) $(FLAGS)
@@ -30,4 +30,4 @@ exe2: compile2
 	@./$(PROG2) $(DiretorioBinario) $(K)
 
 vexe2: compile2
-	@valgrind -s ./$(PROG2) $(DiretorioBinario) $(K)
+	@valgrind --leak-check=full -s ./$(PROG2) $(DiretorioBinario) $(K)

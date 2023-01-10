@@ -20,7 +20,13 @@ int ConfereTxt(char str[]);
 void ArmazenaAuxiliaresEmBinario(FILE * bin, int qtd_Generos);
 void LeAuxiliaresBinario(FILE * bin);
 void RelatorioPalavra(tPalavra **pp_Palavras, tDocumento **pp_Docs);
-void RelatorioPalavra_genero(tPalavra **pp_Palavras, tDocumento **pp_Docs, int qtd_generos);
+void RelatorioPalavra_genero(tPalavra *p_Palavra, tDocumento **pp_Docs, int qtd_generos);
 int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc);
 int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char *p_genero, int idx_Docs, int iNovoGenero);
+void ConfereProg1FoiRodado(char entrada[], char modo[]);
+
+
+int Calcula_Frequencia_Palavra_no_TipoNoticia(tDocumento** pp_Docs, tPalavra* p_Palavra, char genero[], int qtd_docs);
+int Cmp_Freq(const void* f1, const void* f2);
+
 #endif

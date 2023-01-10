@@ -86,8 +86,9 @@ char* Get_NomeArquivos(tDocumento** pp_Docs, int idx){
 
 char *Get_GeneroArquivo(tDocumento* p_Doc){
     char *tipo;
-    tipo = malloc(sizeof(char) * 5);
-    strcpy(tipo, p_Doc->tipo);
+    tipo = p_Doc->tipo;
+    //tipo = malloc(sizeof(char) * 5);
+    //strcpy(tipo, p_Doc->tipo);
     return tipo;
 }
 

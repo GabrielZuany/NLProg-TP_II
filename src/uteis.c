@@ -66,13 +66,22 @@ int LeQuantidadeDeArquivos(FILE* fArquivo_caminho_noticias){
 void ConfereEntradaValida(char entrada[], char modo[]){
     FILE *fteste = fopen(entrada, modo);
     if(!(fteste)){
-        printf("ERRO: nao foi possivel abrir o arquivo\n");
+        printf("\nERRO: nao foi possivel abrir o arquivo\n");
         printf("programa 1) ex:  ./exe1 data/train.txt  indice.bin\n");
-        printf("programa 2) ex: ./exe2 ArquivosBinarios/indice.bin K\n");
+        printf("programa 2) ex: ./exe2 ArquivosBinarios/indice.bin K\n\n\n");
         exit(EXIT_FAILURE);
     }
     fclose(fteste);
 }
+
+void ConfereProg1FoiRodado(char entrada[], char modo[]){
+    FILE *fteste = fopen(entrada, modo);
+    if(!(fteste)){
+        printf("\nERRO: arquivo binario nao encontrado! rode o programa um antes\n\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 
 void ResetaString(char str[]){
     int i = 0;
@@ -256,32 +265,30 @@ void RelatorioPalavra(tPalavra **pp_Palavras, tDocumento **pp_Docs){
         scanf("%s", nome);
         scanf("%*c");
     }
-    //ImprimePalavra(pp_Palavras[idx_palavra]);
+
     qtd_docs_presente = Calcula_EmQuantosDocumentosEstaPresente(pp_Palavras[idx_palavra], qtd_docs);
-    /*
+    
     printf("\nnumero de documentos com a palavra: %d\n", qtd_docs_presente);
     printf("----------------------------------------------\n");
 
     RelatorioPalavra_frequencia(pp_Palavras, qtd_docs, idx_palavra);
     printf("----------------------------------------------\n");
-    */
-    RelatorioPalavra_genero(pp_Palavras, pp_Docs, Get_Or_Set_Valor('g', "get", null));
+    RelatorioPalavra_genero(pp_Palavras[idx_palavra], pp_Docs, Get_Or_Set_Valor('g', "get", null));
 
 }
 
-void RelatorioPalavra_genero(tPalavra **pp_Palavras, tDocumento **pp_Docs, int qtd_generos){
+void  RelatorioPalavra_genero(tPalavra *p_Palavra, tDocumento **pp_Docs, int qtd_generos){
     int i = 0, qtd_Docs = 0, iNovoGenero = 0;
     char **pp_TodosGeneros;
     char **pp_UnicoGeneros;
     char genero[5] = "";
-
     qtd_Docs = Get_Or_Set_Valor('d', "get", null);
 
     //iniclizaza generos auxiliares
     pp_UnicoGeneros = malloc(sizeof(char*) * qtd_generos);
     pp_TodosGeneros = malloc(sizeof(char*) * qtd_Docs);
 
-
+    
     //armazeno no pp_UnicoGenero os generos sem repeticao
     for(i = 0; i < qtd_Docs; i++){
         ResetaStrComTam(genero, 5);
@@ -290,16 +297,48 @@ void RelatorioPalavra_genero(tPalavra **pp_Palavras, tDocumento **pp_Docs, int q
         iNovoGenero = Armazena_Genero_Array(pp_TodosGeneros, pp_UnicoGeneros, genero, i, iNovoGenero);
     }
 
+    int *freq;
+    int *freq_aux;
+    int *acessado;
+    freq = malloc(sizeof(int) * qtd_generos);
+    freq_aux = malloc(sizeof(int) * qtd_generos);
+    acessado = malloc(sizeof(int) * qtd_generos);
+
+    
     for(i = 0; i < qtd_generos; i++){
-        printf("%s \n", pp_UnicoGeneros[i]);
+        freq[i] = Calcula_Frequencia_Palavra_no_TipoNoticia(pp_Docs, p_Palavra, pp_UnicoGeneros[i], qtd_Docs);
+        freq_aux[i] = freq[i];
+        acessado[i] = 0;
     }
 
-
-
-
-    //a liberacao eh feita assim pq passei os ponteiros salvos no pp_TodosGeneros para o pp_UnicoGenero
-    LiberaAuxGenero(pp_TodosGeneros, qtd_Docs);
+    qsort(freq, qtd_generos, sizeof(int), Cmp_Freq);
+    
+    //impressao 
+    int idx_aux = 0, contador = 1;
+    
+    printf("Impressao frequencia ordenada em generos:\n");
+    for(i = 0; i < qtd_generos; i++){
+        for(idx_aux = 0; idx_aux < qtd_generos; idx_aux++){
+            if((freq[i] == freq_aux[idx_aux]) && acessado[idx_aux] == 0){
+                printf("    top %d: frequencia %d no genero %s\n", contador, freq_aux[idx_aux], pp_UnicoGeneros[idx_aux]);
+                acessado[idx_aux] = 1;
+                contador++;
+            }
+        }
+    }
+    
+    free(pp_TodosGeneros);
     free(pp_UnicoGeneros);
+    free(freq);
+    free(freq_aux);
+    free(acessado);
+}
+
+
+int Cmp_Freq(const void* f1, const void* f2){
+    int freq1 = *(int*)f1;
+    int freq2 = *(int*)f2;
+    return freq2 - freq1;
 }
 
 int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char genero[], int idx_Docs, int iNovoGenero){
@@ -315,4 +354,19 @@ int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char g
         iNovoGenero++;
     }
     return iNovoGenero;
+}
+
+
+int Calcula_Frequencia_Palavra_no_TipoNoticia(tDocumento** pp_Docs, tPalavra* p_Palavra, char genero[], int qtd_docs){
+    int idx_doc = 0, frequencia = 0;
+    char* tipo = NULL;
+    
+    for(idx_doc = 0; idx_doc < qtd_docs; idx_doc++){
+        tipo = Get_GeneroArquivo(pp_Docs[idx_doc]);
+
+        if(strcmp(genero, tipo) == 0){
+            frequencia += Get_FrequenciaPalavraNoDoc(p_Palavra, idx_doc);
+        }
+    }
+    return frequencia;
 }

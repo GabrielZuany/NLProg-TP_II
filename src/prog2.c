@@ -9,7 +9,8 @@ int main(int argc, char *argv[]){
         printf("ex:  ./prog2 arq.bin K\n");
         exit(0);
     }
-    ConfereEntradaValida(argv[1], "rb");
+    
+    ConfereProg1FoiRodado(argv[1], "rb");
     char entrada[100] = "";
     int k = atoi(argv[2]);
     strcpy(entrada, argv[1]);   
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]){
 1. salvar as structs .....................................ok
 x. switch opcao...........................................ok
 2. relatorio documento....................................ok
-3. relatorio dicionario...................................
+3. relatorio dicionario...................................ok
 4. Buscar ................................................
 5. Classificar............................................
 */
