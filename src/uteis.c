@@ -18,7 +18,7 @@ void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao
         //sair
         break;
     case 1:
-        //Buscador
+        Buscador(pp_Docs, pp_Palavras);
         break;
     case 2:
         //Classificador
@@ -80,6 +80,7 @@ void ConfereProg1FoiRodado(char entrada[], char modo[]){
         printf("\nERRO: arquivo binario nao encontrado! rode o programa um antes\n\n");
         exit(EXIT_FAILURE);
     }
+    fclose(fteste);
 }
 
 
@@ -370,3 +371,90 @@ int Calcula_Frequencia_Palavra_no_TipoNoticia(tDocumento** pp_Docs, tPalavra* p_
     }
     return frequencia;
 }
+
+
+void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
+    int encontrou = 0, qtd_palavras_buscador = 0, idx_aux = 0, i = 0, j = 0, qtd_Docs = 0;
+    int* idx_palavra = malloc(sizeof(int));
+    char palavra[100];
+    char lixo = '\0';
+    qtd_Docs = Get_Or_Set_Valor('d', "get", null);
+    
+    printf("Digite as palavras que deseja buscar, ex: palavra1 palavra2 palavra3(ENTER)  \n");
+    
+    //pega os indices das palavras
+    while(TRUE){
+        scanf("%s", palavra);
+        idx_aux = Retorna_Idx_Palavra(pp_Palavras, palavra);
+
+        if (idx_aux != -1){
+            encontrou = 1;
+            idx_palavra[qtd_palavras_buscador] = idx_aux;
+            qtd_palavras_buscador++;
+            idx_palavra = (int*)realloc(idx_palavra, (sizeof(int) * (qtd_palavras_buscador + 1)));
+            
+        }
+        scanf("%c", &lixo);
+        if(lixo == '\n'){
+            break;
+        }
+    }
+    if(!encontrou){
+        printf(">>> Nao foi encontrada nenhuma palavra inserida.\n");
+        return;
+    }
+    
+    double *TF_IDF_docs = NULL;
+    double *aux_TF_IDF_docs = NULL;
+    int *acessados =  NULL;
+
+    TF_IDF_docs = malloc(sizeof(double) * qtd_Docs);
+    aux_TF_IDF_docs = malloc(sizeof(double) * qtd_Docs);
+    acessados = malloc(sizeof(int) * qtd_Docs);
+
+    for(i = 0; i < qtd_Docs; i++){
+        acessados[i] = 0;
+        TF_IDF_docs[i] = calculaSomatorio_TF_IDF(pp_Docs[i], pp_Palavras ,idx_palavra, qtd_palavras_buscador, i);
+        aux_TF_IDF_docs[i] = TF_IDF_docs[i];
+    }
+    qsort(TF_IDF_docs, qtd_Docs, sizeof(double), Cmp_TF_IDF);
+        
+    printf("\ntop 10 documentos com maior TF-IDF das palavras selecionadas\n");
+    for(i = 0; i < qtd_Docs; i++){
+        for(j = 0; j < qtd_Docs; j++){
+            if(TF_IDF_docs[i] == aux_TF_IDF_docs[j] && !(acessados[j])){
+                acessados[j] = 1;
+                printf("doc[%d]: %lf\n", j, TF_IDF_docs[i]);
+            }
+        }    
+    }
+    
+    free(TF_IDF_docs);
+    free(aux_TF_IDF_docs);
+    free(acessados);
+    free(idx_palavra);
+}
+
+
+int Cmp_TF_IDF(const void* f1, const void* f2){
+    double x = *(double*)f1;
+    double y = *(double*)f2;
+    if(x > y){
+        return -1;
+    }
+    if(x < y){
+        return 1;
+    }return 0;
+}
+
+
+double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *idx_palavra, int qtd_palavras_buscador, int idx_documento){
+    double somador_tf_idf = 0;
+    int i;
+    for(i = 0; i < qtd_palavras_buscador; i++){
+        somador_tf_idf += Acesso_TF_IDF_NoDocX(pp_Palavras[idx_palavra[i]], idx_documento); 
+        //pp_Palavras[idx_palavra[i]] //dicionario[vetor_de_indices[posicao no vetor]] == palavra no dicionario
+    }
+    return somador_tf_idf;
+}
+

@@ -56,4 +56,6 @@ int EncontraDocumentoComFrequenciaX(tPalavra *p_palavra, int frequencia, int *pA
 
 int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos);
 
+double Acesso_TF_IDF_NoDocX(tPalavra* p_palavra, int idx_documento);
+
 #endif

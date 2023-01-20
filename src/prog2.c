@@ -60,13 +60,11 @@ int main(int argc, char *argv[]){
 }
 
 
-//falta imprimir umas saidas do prog1
-
 /*
 1. salvar as structs .....................................ok
 x. switch opcao...........................................ok
 2. relatorio documento....................................ok
 3. relatorio dicionario...................................ok
-4. Buscar ................................................
+4. Buscar ................................................ok
 5. Classificar............................................
 */

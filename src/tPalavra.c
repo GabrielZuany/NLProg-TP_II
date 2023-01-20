@@ -159,7 +159,7 @@ int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]){
             return i;
         }
     }
-    return -667;
+    return -1;
 }
 
 int PalavraRegistrada(tPalavra **pp_Palavras, int qtdPalavras, char palavra[]){
@@ -435,4 +435,9 @@ int VerificaPalavraExiste(tPalavra **pp_Palavras, char nome[]){
 
 int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos){
     return p_Palavra->pFrenquencia[pos];
+}
+
+
+double Acesso_TF_IDF_NoDocX(tPalavra* p_palavra, int idx_documento){
+    return p_palavra->pTF_IDF[idx_documento];
 }

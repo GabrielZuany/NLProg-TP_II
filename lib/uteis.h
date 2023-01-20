@@ -24,9 +24,12 @@ void RelatorioPalavra_genero(tPalavra *p_Palavra, tDocumento **pp_Docs, int qtd_
 int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc);
 int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char *p_genero, int idx_Docs, int iNovoGenero);
 void ConfereProg1FoiRodado(char entrada[], char modo[]);
-
+void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras);
+int Cmp_TF_IDF(const void* f1, const void* f2);
 
 int Calcula_Frequencia_Palavra_no_TipoNoticia(tDocumento** pp_Docs, tPalavra* p_Palavra, char genero[], int qtd_docs);
 int Cmp_Freq(const void* f1, const void* f2);
+
+double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *idx_palavra, int qtd_palavras_buscador, int idx_documento);
 
 #endif

@@ -30,4 +30,4 @@ exe2: compile2
 	@./$(PROG2) $(DiretorioBinario) $(K)
 
 vexe2: compile2
-	@valgrind --leak-check=full -s ./$(PROG2) $(DiretorioBinario) $(K)
+	@valgrind --leak-check=full  --show-leak-kinds=all -s ./$(PROG2) $(DiretorioBinario) $(K)
