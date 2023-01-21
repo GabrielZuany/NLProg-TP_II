@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
         ExibeMenu();
         scanf("%d",&opcao);
         scanf("%*c");
-        ExecutaOpcaoUsuario(pp_Docs, pp_Palavras, opcao);
+        ExecutaOpcaoUsuario(pp_Docs, pp_Palavras, opcao, k);
     }while(opcao != 0);
 
     //testes
@@ -55,6 +55,7 @@ int main(int argc, char *argv[]){
     //liberacao
     LiberaDocs(pp_Docs);
     LiberaPalavras(pp_Palavras);
+    printf("k: %d\n", k);
     printf("programa 2 encerrado com sucesso!\n");
     return 0;
 }
@@ -67,4 +68,9 @@ x. switch opcao...........................................ok
 3. relatorio dicionario...................................ok
 4. Buscar ................................................ok
 5. Classificar............................................
+    5.1 Registrar doc.....................................ok
+    5.2 Calcular cos......................................
+    5.3 Retornar tipo noticia.............................ok
+
+OBS: Trocar nome da Teste_ImprimeDocumentos(tDocumento** pp_Docs)
 */

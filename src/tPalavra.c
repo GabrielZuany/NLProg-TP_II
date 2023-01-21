@@ -441,3 +441,4 @@ int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos){
 double Acesso_TF_IDF_NoDocX(tPalavra* p_palavra, int idx_documento){
     return p_palavra->pTF_IDF[idx_documento];
 }
+

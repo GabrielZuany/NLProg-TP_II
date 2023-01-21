@@ -11,7 +11,7 @@ void ExibeMenu(){
     printf("[5] Imprime dicionario\n[6] Imprime documentos\n------\n>>> ");
 }
 
-void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao){
+void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao, int k){
     
     switch (opcao){
     case 0:
@@ -21,7 +21,7 @@ void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao
         Buscador(pp_Docs, pp_Palavras);
         break;
     case 2:
-        //Classificador
+        Classificador(pp_Docs, pp_Palavras, k);
         break;
     case 3:
         RelatorioPalavra(pp_Palavras, pp_Docs);
@@ -205,8 +205,6 @@ char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx){
     return str;
 }
 
-//novas
-
 int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc){
     int i = 0, existe = 0, qtd_generos = 0;
     qtd_generos = Get_Or_Set_Valor('g', "get", null);
@@ -235,7 +233,6 @@ void LeAuxiliaresBinario(FILE * bin){
 }
 
 int ConfereTxt(char str[]){
-
     int i = 0, tam = 0;
     tam = strlen(str);
 
@@ -243,8 +240,7 @@ int ConfereTxt(char str[]){
         if(str[i] == '.'){
             return 1;
         }
-    }
-    return 0;
+    }return 0;
 }
 
 void RelatorioPalavra(tPalavra **pp_Palavras, tDocumento **pp_Docs){
@@ -305,7 +301,6 @@ void  RelatorioPalavra_genero(tPalavra *p_Palavra, tDocumento **pp_Docs, int qtd
     freq_aux = malloc(sizeof(int) * qtd_generos);
     acessado = malloc(sizeof(int) * qtd_generos);
 
-    
     for(i = 0; i < qtd_generos; i++){
         freq[i] = Calcula_Frequencia_Palavra_no_TipoNoticia(pp_Docs, p_Palavra, pp_UnicoGeneros[i], qtd_Docs);
         freq_aux[i] = freq[i];
@@ -373,13 +368,14 @@ int Calcula_Frequencia_Palavra_no_TipoNoticia(tDocumento** pp_Docs, tPalavra* p_
 }
 
 
+// ------------ BUSCADOR ---------------    
 void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
+    double *TF_IDF_docs = NULL, *aux_TF_IDF_docs = NULL;
     int encontrou = 0, qtd_palavras_buscador = 0, idx_aux = 0, i = 0, j = 0, qtd_Docs = 0;
-    int* idx_palavra = malloc(sizeof(int));
-    char palavra[100];
-    char lixo = '\0';
-    qtd_Docs = Get_Or_Set_Valor('d', "get", null);
+    int* idx_palavra = malloc(sizeof(int)), *acessados =  NULL;;
+    char palavra[100], lixo = '\0';
     
+    qtd_Docs = Get_Or_Set_Valor('d', "get", null);
     printf("Digite as palavras que deseja buscar, ex: palavra1 palavra2 palavra3(ENTER)  \n");
     
     //pega os indices das palavras
@@ -403,10 +399,6 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
         printf(">>> Nao foi encontrada nenhuma palavra inserida.\n");
         return;
     }
-    
-    double *TF_IDF_docs = NULL;
-    double *aux_TF_IDF_docs = NULL;
-    int *acessados =  NULL;
 
     TF_IDF_docs = malloc(sizeof(double) * qtd_Docs);
     aux_TF_IDF_docs = malloc(sizeof(double) * qtd_Docs);
@@ -425,6 +417,7 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
             if(TF_IDF_docs[i] == aux_TF_IDF_docs[j] && !(acessados[j])){
                 acessados[j] = 1;
                 printf("doc[%d]: %lf\n", j, TF_IDF_docs[i]);
+                break;
             }
         }    
     }
@@ -434,7 +427,6 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
     free(acessados);
     free(idx_palavra);
 }
-
 
 int Cmp_TF_IDF(const void* f1, const void* f2){
     double x = *(double*)f1;
@@ -447,7 +439,6 @@ int Cmp_TF_IDF(const void* f1, const void* f2){
     }return 0;
 }
 
-
 double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *idx_palavra, int qtd_palavras_buscador, int idx_documento){
     double somador_tf_idf = 0;
     int i;
@@ -457,4 +448,75 @@ double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *
     }
     return somador_tf_idf;
 }
+
+// -------------- CLASSIFICADOR ------------------
+void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
+    char palavra[100];
+    int qtd_palavras_classificador = 0, encontrou = 0;
+    char lixo;
+    int* idx_palavra = malloc(sizeof(int));
+    int i = 0;
+    int idx_aux = 0;
+    tDocumento *pDoc_Digitadas = NULL;
+
+    //obtencao das palavras
+    while(TRUE){
+        scanf("%s", palavra);
+        idx_aux = Retorna_Idx_Palavra(pp_Palavras, palavra);
+        if (idx_aux != -1){
+            encontrou = 1;
+            idx_palavra[qtd_palavras_classificador] = idx_aux;
+            qtd_palavras_classificador++;
+            idx_palavra = (int*)realloc(idx_palavra, (sizeof(int) * (qtd_palavras_classificador + 1)));  
+        }
+        scanf("%c", &lixo);
+        if(lixo == '\n') break;
+    }
+    if(!encontrou){
+        printf(" << PALAVRA(S) NAO EXISTE(M) NO CORPUS >>\n");
+        return;
+    }
+    pDoc_Digitadas = InicializaDocumentoClassificador(idx_palavra, qtd_palavras_classificador);
+    
+    //Só gasta mais processamento...
+    //lorenzo: nao vi necessidade do recalculo do tf-idf, mas fizemos devido às pendências do trabalho
+    for(i = 0; i < qtd_palavras_classificador; i++){
+        Atualiza_Palavra_TF_IDF(pp_Palavras[idx_palavra[i]], (Get_Or_Set_Valor('d', "get", null)));
+    }
+
+    //calculo da distancia
+    int qtd_docs =  Get_Or_Set_Valor('d', "get", null);
+    double *pResultadosCos = malloc(sizeof(double)*qtd_docs);
+    double *p_aux_ResultadosCos =  malloc(sizeof(double)*qtd_docs);
+    int *pAcessados =  malloc(sizeof(int)*qtd_docs);
+
+    for(i = 0; i < qtd_docs; i++){
+        //pResultadosCos[i] = CalculaDistanciaPorCos();
+        p_aux_ResultadosCos[i] = 10;
+        pResultadosCos[i] = 10;
+        if(i == 0 || i == 1 || i == 2 || i == 3){
+            pResultadosCos[i] = 0;
+        }
+
+        //p_aux_ResultadosCos[i] = pResultadosCos[i];
+        pAcessados[i] = 0;
+    }
+    p_aux_ResultadosCos[6] = 0;
+    p_aux_ResultadosCos[5] = 0;
+    p_aux_ResultadosCos[13] = 0;
+    p_aux_ResultadosCos[14] = 0;
+    //qsrot(pResultadosCos);
+
+    ImprimeResultadoClassificador(pp_Docs, pResultadosCos, p_aux_ResultadosCos, pAcessados, qtd_docs, k);
+    
+    //liberacao de memoria
+    ImprimeUmDocumento(pDoc_Digitadas);
+    LiberaDocumento(pDoc_Digitadas);
+    free(idx_palavra);
+    free(pResultadosCos);
+    free(p_aux_ResultadosCos);
+    free(pAcessados);
+}
+
+
 

@@ -10,6 +10,7 @@ void Idx_Documentos(tDocumento** pp_Docs, tPalavra** pp_Palavras);
 //------inicializacao e alocacao de memoria------
 tDocumento** Inicializa_Array_Docs(int qtd_docs);
 tDocumento* Inicializa_Doc(tPalavra** pp_Palavras, char nome[], char tipo[], int idx);
+tDocumento* InicializaDocumentoClassificador(int* idx_palavra, int qtd_palavras_classificador);
 
 //------auxiliares-------
 char* Get_NomeArquivos(tDocumento** pp_Docs, int idx);
@@ -25,15 +26,21 @@ tDocumento** RegistraPalavrasNosDocumentos(tPalavra** pp_Palavras, tDocumento** 
 tDocumento* RegistraPalavrasNoDocumentoAtual(tPalavra** pp_Palavras, int idx_doc, tDocumento* p_Doc);
 
 //------impressao-------
+void ImprimeResultadoClassificador(tDocumento** pp_Docs, double* pResultadosCos, double* p_aux_ResultadosCos, int* pAcessados, int qtd_docs, int k);
 void Teste_ImprimeDocumentos(tDocumento **pp_Docs);
+void ImprimeUmDocumento(tDocumento *p_doc);
 
 //-----liberar memoria-------
 void LiberaDocs(tDocumento** pp_Docs);
 void LiberaAuxGenero(char **pp_auxGenero, int qtd);
+void LiberaDocumento(tDocumento* Doc);
 
 //------relatório documentos------
 void RelatorioDocumento(tDocumento** pp_Docs);
 //int Cmp_Idx_Docs(const void *p1, const void *p2);
 int Cmp_Qtd_Palavras(const void *p1, const void *p2);
 
+
+void AdicionaPresencaEmGenero(char* genero, char** pp_UnicoGeneros, int* pPresencasEmCadaGenero, int qtd_generos);
+void ImprimeGeneroComMaisPresencas(char **pp_UnicoGeneros, int *pPresencasEmCadaGenero, int qtd_generos);
 #endif

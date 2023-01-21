@@ -4,8 +4,7 @@
 typedef int (*Vetor_Get_or_Set_fn)(char acao[], int valor);
 
 void ExibeMenu();
-void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao);
-
+void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao, int k);
 int LeQuantidadeDeArquivos(FILE* fArquivo_caminho_noticias);
 void ConfereEntradaValida(char entrada[], char modo[]);
 void ResetaString(char str[]);
@@ -26,10 +25,11 @@ int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char *
 void ConfereProg1FoiRodado(char entrada[], char modo[]);
 void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras);
 int Cmp_TF_IDF(const void* f1, const void* f2);
-
 int Calcula_Frequencia_Palavra_no_TipoNoticia(tDocumento** pp_Docs, tPalavra* p_Palavra, char genero[], int qtd_docs);
 int Cmp_Freq(const void* f1, const void* f2);
 
 double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *idx_palavra, int qtd_palavras_buscador, int idx_documento);
+
+void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k);
 
 #endif
