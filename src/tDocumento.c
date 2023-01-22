@@ -287,12 +287,9 @@ void ImprimeResultadoClassificador(tDocumento** pp_Docs, double* pResultadosCos,
         pp_TodosGeneros[i] = Get_GeneroArquivo(pp_Docs[i]);
         strcpy(genero, pp_TodosGeneros[i]);
         iNovoGenero = Armazena_Genero_Array(pp_TodosGeneros, pp_UnicoGeneros, genero, i, iNovoGenero);
-        printf("%lf ", p_aux_ResultadosCos[i]);
     }
-    printf("\n");
 
     for(i = 0; i < k; i++){
-        //printf("%lf ", pResultadosCos[i]);
         for(idx_doc = 0; idx_doc < qtd_docs; idx_doc++){
             if ((pResultadosCos[i] == p_aux_ResultadosCos[idx_doc]) && (pAcessados[idx_doc] == 0)){
                 pAcessados[idx_doc] = 1;
@@ -308,7 +305,6 @@ void AdicionaPresencaEmGenero(char* genero, char** pp_UnicoGeneros, int* pPresen
     int i = 0;
     for(i = 0; i < qtd_generos; i++){
         if (strcmp(genero, pp_UnicoGeneros[i]) == 0){
-            printf("%s\n", genero);
             pPresencasEmCadaGenero[i]++;
             return;
         }
@@ -333,4 +329,18 @@ void ImprimeGeneroComMaisPresencas(char **pp_UnicoGeneros, int *pPresencasEmCada
         }
     }
     printf("\nobs.:presencas do(s) genero(s) em k: %d\n", maior);
+}
+
+int ExistePalavraEmDoc(int idx_palavra, tDocumento* p_Doc){
+    int i;
+    for(i=0; i<p_Doc->qtd_palavras_contidas; i++){
+        if(idx_palavra == p_Doc->idx_palavras[i]){
+            return i;
+        }
+    }   
+    return -1;
+}
+
+int Retorna_Idx_Palavra_ViaDoc(tDocumento* pDoc_Digitadas, int i){
+    return pDoc_Digitadas->idx_palavras[i];
 }

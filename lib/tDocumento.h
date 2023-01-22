@@ -43,4 +43,7 @@ int Cmp_Qtd_Palavras(const void *p1, const void *p2);
 
 void AdicionaPresencaEmGenero(char* genero, char** pp_UnicoGeneros, int* pPresencasEmCadaGenero, int qtd_generos);
 void ImprimeGeneroComMaisPresencas(char **pp_UnicoGeneros, int *pPresencasEmCadaGenero, int qtd_generos);
+int ExistePalavraEmDoc(int idx_palavra, tDocumento* p_Doc);
+int Retorna_Idx_Palavra_ViaDoc(tDocumento* pDoc_Digitadas, int i);
+
 #endif

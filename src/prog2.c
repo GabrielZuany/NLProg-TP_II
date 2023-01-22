@@ -67,10 +67,12 @@ x. switch opcao...........................................ok
 2. relatorio documento....................................ok
 3. relatorio dicionario...................................ok
 4. Buscar ................................................ok
-5. Classificar............................................
+5. Classificar............................................ok
     5.1 Registrar doc.....................................ok
-    5.2 Calcular cos......................................
+    5.2 Calcular cos......................................ok
     5.3 Retornar tipo noticia.............................ok
+6. Verificar se saida faz sentido.........................
+7. free no classificador..................................
 
 OBS: Trocar nome da Teste_ImprimeDocumentos(tDocumento** pp_Docs)
 */

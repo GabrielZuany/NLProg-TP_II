@@ -30,6 +30,24 @@ int Cmp_Freq(const void* f1, const void* f2);
 
 double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *idx_palavra, int qtd_palavras_buscador, int idx_documento);
 
+
+
 void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k);
+double CalculaDistanciaPorCos(tDocumento* pDoc_Digitadas, tDocumento* p_Doc, int idx_doc, tPalavra** pp_Palavras, double* p_frequencia, int qtd_palavras_classificador);
+int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador);
+double CalculaSomatorioNumerador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc,  int qtd_palavras_classificador, double *a, double *b);
+double CalculaSomatorioDenominador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, double* p_TFIDF_palavra_em_doc, int qtd_palavras_classificador);
+int Cmp_Distancia_Docs(const void *d1, const void *d2);
+/*
+                            X
+             ---------------^---------------
+             E(tf-idf(w,dx) * tfidf-(w, di))
+        ________________________________________
+
+    sqrt[E(tf-idf(w,d1))] * sqrt[E(tf-idf(w, d2))]
+    ----------v------------   -----------v------------
+              y1                        y2
+
+*/
 
 #endif
