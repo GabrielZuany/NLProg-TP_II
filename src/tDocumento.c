@@ -28,7 +28,19 @@ tDocumento* Inicializa_Doc(tPalavra** pp_Palavras, char nome[], char tipo[], int
     return p_Doc;
 }
 
+tDocumento* InicializaDocumentoClassificador(int* idx_palavra, int qtd_palavras_classificador){
+    int i = 0;
+    tDocumento *doc = malloc(sizeof(tDocumento));
+    doc->idx_palavras = malloc(sizeof(int)*qtd_palavras_classificador);
+    doc->qtd_palavras_contidas = qtd_palavras_classificador;
+    doc->idx = 0;
+    
+    for(i = 0; i < qtd_palavras_classificador; i++){
+        doc->idx_palavras[i] = idx_palavra[i];  
+    }
 
+    return doc;
+}
 
 //------registrar palavras e montar Struct-------
 tDocumento** RegistraPalavrasNosDocumentos(tPalavra** pp_Palavras, tDocumento** pp_Docs){
@@ -61,8 +73,9 @@ tDocumento** RegistraPalavrasNosDocumentos(tPalavra** pp_Palavras, tDocumento** 
 tDocumento* RegistraPalavrasNoDocumentoAtual(tPalavra** pp_Palavras, int idx_doc, tDocumento* p_Doc){
     int idx_palavra = 0;
     int idx_palavra_doc = 0;
+    char tipo[5] = "---";
     int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
-    
+    strcpy(tipo, p_Doc->tipo);
     for(idx_palavra = 0; idx_palavra < qtd_palavras; idx_palavra++){
         
         if(RetornaFrequenciaPalavra(pp_Palavras[idx_palavra], idx_doc) > 0){
@@ -182,10 +195,14 @@ void LiberaDocs(tDocumento** pp_Docs){
     int qtd_Docs = Get_Or_Set_Valor('d', "get", null);
     int i;
     for(i=0; i<qtd_Docs; i++){
-        free(pp_Docs[i]->idx_palavras);
-        free(pp_Docs[i]);
+        LiberaDocumento(pp_Docs[i]);
     }
     free(pp_Docs);
+}
+
+void LiberaDocumento(tDocumento* Doc){
+    free(Doc->idx_palavras);
+    free(Doc);
 }
 
 void LiberaAuxGenero(char **pp_auxGenero, int qtd){
@@ -246,4 +263,90 @@ void Teste_ImprimeDocumentos(tDocumento **pp_Docs){
         }
         printf("\n\n");
     }
+}
+
+
+void ImprimeUmDocumento(tDocumento *p_doc){
+    int i = 0;
+    printf("qtd_palavras: %d    ", p_doc->qtd_palavras_contidas);
+    printf("indice das palavars contidas: ");
+    for(i = 0; i < p_doc->qtd_palavras_contidas; i++){
+        printf("%d ", p_doc->idx_palavras[i]);
+    }
+}
+
+void ImprimeResultadoClassificador(tDocumento** pp_Docs, double* pResultadosCos, double* p_aux_ResultadosCos, int* pAcessados, int qtd_docs, int k){
+    int i = 0, idx_doc = 0, qtd_generos = Get_Or_Set_Valor('g', "get", null), iNovoGenero = 0;
+    int *pPresencasEmCadaGenero = calloc(sizeof(int), qtd_generos);
+    char genero[5] = "";
+    char **pp_UnicoGeneros = malloc(sizeof(char*) * qtd_generos);
+    char **pp_TodosGeneros = malloc(sizeof(char*) * qtd_docs);
+
+    //armazeno no pp_UnicoGenero os generos sem repeticao
+    for(i = 0; i < qtd_docs; i++){
+        ResetaStrComTam(genero, 5);
+        pp_TodosGeneros[i] = Get_GeneroArquivo(pp_Docs[i]);
+        strcpy(genero, pp_TodosGeneros[i]);
+        iNovoGenero = Armazena_Genero_Array(pp_TodosGeneros, pp_UnicoGeneros, genero, i, iNovoGenero);
+    }
+
+    for(i = 0; i < k; i++){
+        for(idx_doc = 0; idx_doc < qtd_docs; idx_doc++){
+            if ((pResultadosCos[i] == p_aux_ResultadosCos[idx_doc]) && (pAcessados[idx_doc] == 0)){
+                pAcessados[idx_doc] = 1;
+                AdicionaPresencaEmGenero(pp_Docs[idx_doc]->tipo, pp_UnicoGeneros, pPresencasEmCadaGenero, qtd_generos);
+                break;
+            }
+        }   
+    }
+    ImprimeGeneroComMaisPresencas(pp_UnicoGeneros, pPresencasEmCadaGenero, qtd_generos, k);
+    free(pPresencasEmCadaGenero);
+    free(pp_TodosGeneros);
+    free(pp_UnicoGeneros);
+}
+
+void AdicionaPresencaEmGenero(char* genero, char** pp_UnicoGeneros, int* pPresencasEmCadaGenero, int qtd_generos){
+    int i = 0;
+    for(i = 0; i < qtd_generos; i++){
+        if (strcmp(genero, pp_UnicoGeneros[i]) == 0){
+            pPresencasEmCadaGenero[i]++;
+            return;
+        }
+    }
+}
+
+void ImprimeGeneroComMaisPresencas(char **pp_UnicoGeneros, int *pPresencasEmCadaGenero, int qtd_generos, int k){
+    int i = 0, maior = 0;
+    for(i = 0; i < qtd_generos; i++){
+        if(i == 0){
+            maior = pPresencasEmCadaGenero[i];
+            continue;
+        }
+        if(pPresencasEmCadaGenero[i] >= maior){
+            maior = pPresencasEmCadaGenero[i];
+        }
+    }
+    printf("\n-----------------------------------------------------------------------------------\n");
+    printf("Resultado: existem maiores probabilidades de o texto pertencer ao(s) genero(s): ");
+    for(i = 0; i < qtd_generos; i++){
+        if (pPresencasEmCadaGenero[i] == maior){
+            printf("%s ", pp_UnicoGeneros[i]);
+        }
+    }
+    printf("\nobs.: o(s) genero(s) possui(em) %d presencas dentre os k(%d) documentos mais proximos", maior, k);
+    printf("\n-----------------------------------------------------------------------------------\n");
+}
+
+int ExistePalavraEmDoc(int idx_palavra, tDocumento* p_Doc){
+    int i;
+    for(i=0; i<p_Doc->qtd_palavras_contidas; i++){
+        if(idx_palavra == p_Doc->idx_palavras[i]){
+            return i;
+        }
+    }   
+    return -1;
+}
+
+int Retorna_Idx_Palavra_ViaDoc(tDocumento* pDoc_Digitadas, int i){
+    return pDoc_Digitadas->idx_palavras[i];
 }

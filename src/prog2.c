@@ -36,25 +36,19 @@ int main(int argc, char *argv[]){
     LeAuxiliaresBinario(fBin);
     fclose(fBin);
 
-    //impressao
-    //Teste_ImprimeDocumentos(pp_Docs);
-    //Teste_ImprimePalavras(pp_Palavras);
-    
-
-    int opcao = 0;    
+    int opcao = 0;
     do{
         ExibeMenu();
-        scanf("%d",&opcao);
-        scanf("%*c");
-        ExecutaOpcaoUsuario(pp_Docs, pp_Palavras, opcao);
+        opcao = GaranteOpcaoValida();
+        ExecutaOpcaoUsuario(pp_Docs, pp_Palavras, opcao, k);
     }while(opcao != 0);
 
     //testes
-    //printf("qtd generos: %d\n", Get_Or_Set_Valor('g', "get", null));
     
     //liberacao
     LiberaDocs(pp_Docs);
     LiberaPalavras(pp_Palavras);
+    printf("k: %d\n", k);
     printf("programa 2 encerrado com sucesso!\n");
     return 0;
 }
@@ -66,5 +60,12 @@ x. switch opcao...........................................ok
 2. relatorio documento....................................ok
 3. relatorio dicionario...................................ok
 4. Buscar ................................................ok
-5. Classificar............................................
+5. Classificar............................................ok
+    5.1 Registrar doc.....................................ok
+    5.2 Calcular cos......................................ok
+    5.3 Retornar tipo noticia.............................ok
+6. Verificar se saida faz sentido.........................
+7. free no classificador..................................
+
+OBS: Trocar nome da Teste_ImprimeDocumentos(tDocumento** pp_Docs)
 */

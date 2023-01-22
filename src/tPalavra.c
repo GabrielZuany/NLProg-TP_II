@@ -230,18 +230,16 @@ void Atualiza_Palavra_TF_IDF(tPalavra *p_palavra, int qtdDocumentos){
     DF = Calcula_EmQuantosDocumentosEstaPresente(p_palavra, qtdDocumentos);    
     n = qtdDocumentos;
     for(idxDocs = 0; idxDocs < qtdDocumentos; idxDocs++){
-        TF = (double)p_palavra->pFrenquencia[idxDocs];
-        IDF = Calcula_IDF((double)n, (double)DF);
-        p_palavra->pTF_IDF[idxDocs] = TF * IDF;
+        p_palavra->pTF_IDF[idxDocs] = Calcula_TF_IDF((double)p_palavra->pFrenquencia[idxDocs], (double)n, (double)DF);
     }
 }
 
-double Calcula_IDF(double n, double DF){
+double Calcula_TF_IDF(double TF, double n, double DF){
     double IDF = 0, x = 0;
     x = ((1 + n) / (1 + DF));
     IDF = log(x);
     IDF++;
-    return IDF;
+    return TF * IDF;
 }
 
 int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocumentos){
