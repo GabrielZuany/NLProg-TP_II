@@ -154,23 +154,26 @@ void Dispatch_table_Get_Set_inicializa(){
 
 }
 
-static void Dispatch_table_executa(char dado, char acao[], int valor){
+int Dispatch_table_executa(char dado, char acao[], int valor){
     int idx = (int)dado;
 
     if (dispatch_table_Get_Or_Set[idx] != NULL)
-        dispatch_table_Get_Or_Set[idx](acao, valor);
-    else
+        return dispatch_table_Get_Or_Set[idx](acao, valor);
+    else{
         printf(">> ERRO: A funcao '%c' nao foi definida ainda.\n", dado);
+        exit(1);
+    }
 }
 
 int Get_Or_Set_Valor(char dado, char acao[], int valor_registrar){   
+    int x = 0;
     //Dispatch_table_executa('p', 'set', 10); => registra o numero de palavras
     //Dispatch_table_executa('d', 'get', qlq num mas opte por passar NULL); => pega o nunumero de documentos    
-    Dispatch_table_executa(dado, acao, valor_registrar);
+    x = Dispatch_table_executa(dado, acao, valor_registrar);
+    return x;
 }
 
 char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx){
-    const int qtd_docs = Get_Or_Set_Valor('d', "get", null);
     static int idx_doc = 0;
     static char arquivos[10000000][100]; //[qtd docs][tamanho do texto]
     char *str = NULL; 
@@ -188,7 +191,6 @@ char* Get_Set_NomeArquivos(char acao[], char diretorio[], int idx){
 }
 
 char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx){
-    const int qtd_docs = Get_Or_Set_Valor('d', "get", null);
     static int idx_doc = 0;
     static char lista_tipos[10000000][10]; //[qtd docs][tamanho do texto]
     char *str = NULL; 
@@ -485,6 +487,7 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
 
     }
     qsort(pResultadosCos, qtd_docs, sizeof(double), Cmp_Distancia_Docs);
+
     ImprimeResultadoClassificador(pp_Docs, pResultadosCos, p_aux_ResultadosCos, pAcessados, qtd_docs, k);
     ImprimeUmDocumento(pDoc_Digitadas);
     LiberaAuxiliaresClassificador(pDoc_Digitadas, idx_palavra, p_frequencia, pResultadosCos, p_aux_ResultadosCos, pAcessados);
@@ -534,9 +537,6 @@ double CalculaDistanciaPorCos(tDocumento* pDoc_Digitadas, tDocumento* p_Doc, int
 
     for(i = 0; i < qtd_palavras_classificador; i++){
         idx_palavra = Retorna_Idx_Palavra_ViaDoc(pDoc_Digitadas, i);
-        if(ExistePalavraEmDoc(idx_palavra, p_Doc) == -1){
-            continue;
-        }
         p_temp_palavra = pp_Palavras[idx_palavra];
       
         p_TFIDF_palavra_em_doc1[i] = Calcula_TF_IDF(p_frequencia[i], qtdDocs, Calcula_EmQuantosDocumentosEstaPresente(p_temp_palavra, qtdDocs));
@@ -564,13 +564,9 @@ double CalculaSomatorioNumerador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, 
     //                a[w]             b[w]
     
     double somatorio = 0.00;
-    int i = 0, idx_palavra = 0;
+    int i = 0;
 
     for(i = 0; i < qtd_palavras_classificador; i++){
-        idx_palavra = Retorna_Idx_Palavra_ViaDoc(pDoc_Digitadas, i);
-        if(ExistePalavraEmDoc(idx_palavra, p_Doc) == -1){
-            continue;    
-        }
         somatorio += (a[i] * b[i]);
     }
     return somatorio;
@@ -581,13 +577,9 @@ double CalculaSomatorioDenominador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc
     //  ----------v------------   
     //            y 
     
-    int i = 0, idx_palavra = 0;
+    int i = 0;
     double somatorio = 0.00;
     for(i=0; i<qtd_palavras_classificador; i++){
-        idx_palavra = Retorna_Idx_Palavra_ViaDoc(pDoc_Digitadas, i);
-        if(ExistePalavraEmDoc(idx_palavra, p_Doc) == -1){
-            continue;
-        }
         somatorio = somatorio + (p_TFIDF_palavra_em_doc[i] * p_TFIDF_palavra_em_doc[i]);
     }
     return (somatorio);

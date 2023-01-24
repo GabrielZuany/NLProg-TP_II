@@ -52,7 +52,7 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
     //acho q n precisa ser static
     static int idxPalavra = 0;
     tPalavra* p_palavra = NULL;
-    int qtdDocumentos = 0, frequenciaNoDocumento = 0;
+    int qtdDocumentos = 0;
     int idx_aux = 0, freq = 0;
     
     qtdDocumentos = Get_Or_Set_Valor('d', "get", null);
@@ -80,7 +80,7 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
 
 //===============relacionadas com arquivo diretorio===============
 FILE* Get_ArquivoNoticia(char linha[], char argv[]){
-    char diretorio[1000], temp[50], caminho[100], str[1000], argv_copy[100];
+    char diretorio[1000], caminho[100], str[1000], argv_copy[100];
 
     ResetaStrComTam(argv_copy, 100);
     strcpy(argv_copy, argv);
@@ -224,7 +224,6 @@ void Atualiza_Palavra_TF_IDF(tPalavra *p_palavra, int qtdDocumentos){
     //df(p): numero de documentos com a palavra
 
     int idxDocs = 0;
-    double TF = 0, IDF = 0;
     int DF = 0, n = 0;
 
     DF = Calcula_EmQuantosDocumentosEstaPresente(p_palavra, qtdDocumentos);    

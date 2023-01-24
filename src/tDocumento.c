@@ -150,7 +150,7 @@ tDocumento** LeDocsBinario(FILE *bin){
     int qtd_palavras;
     int idx_doc;
     int tamNome = 0, tamTipo = 0;
-    int i = 0, j = 0, k = 0;
+    int i = 0, j = 0;
     
     fread(&qtdDocs, sizeof(int), 1, bin);
     pp_Docs = malloc(sizeof(tDocumento*) * qtdDocs);
@@ -229,7 +229,6 @@ int Cmp_Idx_Docs(const void *p1, const void *p2){
 void RelatorioDocumento(tDocumento** pp_Docs){
     int i = 0, j = 0;
     int qtd_docs = Get_Or_Set_Valor('d', "get", null);
-    int inicio_max = qtd_docs - 10;
     
     qsort(pp_Docs, qtd_docs, sizeof(tDocumento*), Cmp_Qtd_Palavras);
     
