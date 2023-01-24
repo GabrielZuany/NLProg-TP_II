@@ -10,6 +10,7 @@ void ConfereEntradaValida(char entrada[], char modo[]);
 void ResetaString(char str[]);
 void ResetaStrComTam(char str[], int tam);
 void Dispatch_table_Get_Set_inicializa();
+int Dispatch_table_executa(char dado, char acao[], int valor);
 int Get_Set_QuantidadePalavras(char acao[], int valor);
 int Get_Set_QuantidadeDocumento(char acao[], int valor);
 int Get_Or_Set_Valor(char dado, char acao[], int valor_registrar);
