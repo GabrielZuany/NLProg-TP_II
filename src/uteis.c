@@ -438,7 +438,7 @@ double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *
 // -------------- CLASSIFICADOR ------------------
 void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
     char palavra[100] = "";
-    int qtd_palavras_classificador = 0, encontrou = 0, *idx_palavra = malloc(sizeof(int)), i = 0, idx_aux = 0, pos_palavra_no_idx_palavra = 0;
+    int qtd_palavras_classificador = 0, encontrou = 0, *idx_palavra = malloc(sizeof(int) * 1), i = 0, idx_aux = 0, pos_palavra_no_idx_palavra = 0;
     char lixo = '\0';
     double *p_frequencia = NULL;
     p_frequencia = malloc(sizeof(double) * 1);
@@ -467,6 +467,8 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
     }
     if(!encontrou){
         printf(" << PALAVRA(S) NAO EXISTE(M) NO CORPUS >>\n");
+        free(idx_palavra);
+        free(p_frequencia);
         return;
     }
     pDoc_Digitadas = InicializaDocumentoClassificador(idx_palavra, qtd_palavras_classificador);
