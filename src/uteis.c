@@ -30,7 +30,7 @@ void ExecutaOpcaoUsuario(tDocumento **pp_Docs, tPalavra **pp_Palavras, int opcao
         RelatorioDocumento(pp_Docs);
         break;
     case 5:
-        Teste_ImprimePalavras(pp_Palavras);
+        ImprimePalavras(pp_Palavras);
         break;
     case 6:
         Teste_ImprimeDocumentos(pp_Docs);

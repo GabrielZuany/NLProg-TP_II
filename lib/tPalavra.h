@@ -9,53 +9,125 @@ typedef struct tPalavra tPalavra;
 tPalavra** Inicializa_Array_Palavra();
 tPalavra* Inicializa_Palavra(char str[], int qtd_docs, int idxPalavra);
 
-//leitura
+
+
+//---------------leitura------------------
+/**
+ * @brief A partir do arquivo .txt contendo o caminho das notícias, abre cada uma e monta o Idx Palavras (dicionário contendo todas as palavras diferentes dos documentos dados).
+ * 
+ * @param fArquivo_caminho_noticias arquivo .txt contendo o caminho das notícias.
+ * @param pp_Palavras Array de struct tipo tPalavra.
+ * @param qtd_Arquivos quantidade de arquivos a serem lidos.
+ * @param argv comando passado pelo terminal.
+ * @return tPalavra** dicionário com as palavras contidas em todos os documentos.
+ */
 tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** pp_Palavras, int qtd_Arquivos, char argv[]);
+
+/**
+ * @brief A partir do arquivo de notícia, armazena todas as palavras contidas nele (sem repetir).
+ * 
+ * @param fArquivo arquivo notícia.
+ * @param pp_Palavras Array de palavras (dicionário).
+ * @param idxDocumento índice do documento que está sendo lido.
+ * @return tPalavra** Array de palavras (dicionário), atualizado.
+ */
 tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento);
 
-//arquivos
+/**
+ * @brief A partir de uma determinada linha do arquivo que contém o caminho para todas as notícias e o argumento passado pelo terminal, retorna esse arquivo.
+ * 
+ * @param caminho caminho do arquivo (relativo --> "train/noticia.txt")
+ * @param argv pasta cujos arquivos serão lidos (--> "datasets/tiny/train.txt")
+ * @return FILE* arquivo que será lido.
+ */
 FILE* Get_ArquivoNoticia(char caminho[], char argv[]);
 
-//impressao
+
+
+//------------impressao---------------
 void Idx_Palavras(tPalavra** pp_Palavras);
 void ImprimePalavra(tPalavra* p_palavra);
-void Teste_ImprimePalavras(tPalavra **pp_Palavras);
+void ImprimePalavras(tPalavra **pp_Palavras);
 
-//auxiliares 
+
+
+//-----------auxiliares--------------------- 
 void ResetaString(char str[]);
 int ComparaPalavras(const void *p1, const void *p2);
 int PalavraRegistrada(tPalavra **pp_Palavras, int qtdPalavras, char palavra[]);
 int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]);
 int Get_Qtd_Palavras_No_Doc(tPalavra** pp_Palavras, int idx_doc);
 int RetornaFrequenciaPalavra(tPalavra* p_palavra, int idx_doc);
+int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos);
+double Acesso_TF_IDF_NoDocX(tPalavra* p_palavra, int idx_documento);
+void ZeraPonteiroDeInteiro(int *p, int tam);
+
+/**
+ * @brief Verifica se a palavra dada consta no dicionário. Necessário para adicionar palavras sem repetir no dicionário.
+ * 
+ * @param pp_Palavras Dicionário.
+ * @param nome palavra dada.
+ * @return int TRUE se ela existe, FALSE se não existe.
+ */
 int VerificaPalavraExiste(tPalavra **pp_Palavras, char nome[]);
 
-//calculos com palavras
+
+
+//-------------calculos com palavras---------------
 void Insere_Frequencias_em_Doc(int frequencia, int idx_doc, tPalavra* p_palavra);
 void Insere_TF_IDF_em_Doc(double TF_IDF, int idx_doc, tPalavra *p_palavra);
+
+/**
+ * @brief Função responsável por atualizar o TD-IDF daquela palavra, acessando os parâmetros necessários e fazendo o cálculo própriamente dito do TF-IDF.
+ * 
+ * @param p_palavra palavra a qual receberá o valor do cálculo para cada documento.
+ * @param qtdDocumentos quantidade de documentos.
+ */
 void Atualiza_Palavra_TF_IDF(tPalavra *p_palavra, int qtdDocumentos);
+
 int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocumentos);
 double Calcula_TF_IDF(double TF,double n, double DF);
 
-//arquivos binarios
+
+
+//------------arquivos binarios--------------
 void ArmazenaPalavrasEmBinario(FILE* bin, tPalavra** pp_Palavras, int qtd_palavras);
 void Armazena_UMA_PalavraEmBinario(tPalavra* p_Palavra, FILE* bin);
 tPalavra** LeDicionarioBinario(FILE *bin);
 
-//liberacao de palavras
+
+
+//---------liberacao de palavras--------
 void LiberaPalavras(tPalavra **pp_Palavras);
 
-//relatorio palavra
 
+
+//---------relatorio palavra-------------
+
+//usado no qsort em RelatorioPalavra_frequencia()
 int Cmp_frequencia_Palavras(const void *p1, const void *p2);
+
+
+/**
+ * @brief Imprime os 10 documentos com maior frequencia da palavra digitada (em RelatorioPalavra na uteis.c). 
+ * 
+ * @param pp_Palavras dicionario de palavras.
+ * @param qtd_docs quantidade de documentos lidos.
+ * @param idx_palavra índice da palavra digitada.
+ */
 void RelatorioPalavra_frequencia(tPalavra **pp_Palavras, int qtd_docs, int idx_palavra);
-void ZeraPonteiroDeInteiro(int *p, int tam);
+
+/**
+ * @brief A partir de um vetor de frequencias ordenado, busca o documento correspondente a frquencia na posição i.
+ * 
+ * @param p_palavra palavra cuja frequencia em cada documento vai ser acessada.
+ * @param frequencia frequencia que está procurando.
+ * @param pAcessada vetor de inteiros (0, 1) para indicar que aquele documento já foi acessado ou não. Assim evita-se que seja retornado o mesmo documento mais de uma vez.
+ * @param qtd_docs quantidade de documentos a serem analisados.
+ * @return int indice do documento.
+ */
 int EncontraDocumentoComFrequenciaX(tPalavra *p_palavra, int frequencia, int *pAcessada, int qtd_docs);
 
 
-
-int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos);
-
-double Acesso_TF_IDF_NoDocX(tPalavra* p_palavra, int idx_documento);
 
 #endif

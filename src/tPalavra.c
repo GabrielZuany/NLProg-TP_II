@@ -35,8 +35,6 @@ tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** 
         FILE *fArquivo = Get_ArquivoNoticia(linha, argv);
         pp_Palavras = LeArquivo(fArquivo, pp_Palavras, i);
 
-        //tratar docs
-
         fclose(fArquivo);
     }
 
@@ -49,7 +47,6 @@ tPalavra** LeTodosOsArquivosPalavra(FILE* fArquivo_caminho_noticias, tPalavra** 
 
 tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
     char str[50];
-    //acho q n precisa ser static
     static int idxPalavra = 0;
     tPalavra* p_palavra = NULL;
     int qtdDocumentos = 0;
@@ -60,7 +57,6 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
     while(fscanf(fArquivo,"%s", str) == 1){
         
         if(!(PalavraRegistrada(pp_Palavras, (idxPalavra), str))){
-
             pp_Palavras = (tPalavra**)realloc(pp_Palavras, sizeof(tPalavra*) * (idxPalavra + 2));
             p_palavra = Inicializa_Palavra(str, qtdDocumentos, idxPalavra);
             pp_Palavras[idxPalavra] = p_palavra;
@@ -68,7 +64,6 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
             idxPalavra++;
             Get_Or_Set_Valor('p', "set", idxPalavra);
         }else{
-
             idx_aux = Retorna_Idx_Palavra(pp_Palavras, str);
             freq = pp_Palavras[idx_aux]->pFrenquencia[idxDocumento];    
             Insere_Frequencias_em_Doc((freq+1), idxDocumento, pp_Palavras[idx_aux]);
@@ -345,7 +340,7 @@ void LiberaPalavras(tPalavra **pp_Palavras){
 }
 
 //===============impressao===============
-void Teste_ImprimePalavras(tPalavra **pp_Palavras){
+void ImprimePalavras(tPalavra **pp_Palavras){
     int iPalavra = 0, qtdPalavras = 0, iFrequencia = 0, qtdDocs = 0;
     qtdDocs = Get_Or_Set_Valor('d', "get", null);
     qtdPalavras = Get_Or_Set_Valor('p', "get", null);
@@ -385,7 +380,6 @@ void RelatorioPalavra_frequencia(tPalavra **pp_Palavras, int qtd_docs, int idx_p
     }
     free(pAcessada);
     free(pAuxFrequencia);
-
 }
 
 void ZeraPonteiroDeInteiro(int *p, int tam){
