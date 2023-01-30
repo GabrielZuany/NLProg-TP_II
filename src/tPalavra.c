@@ -137,16 +137,40 @@ tPalavra* Inicializa_Palavra(char str[], int qtd_docs, int idxPalavra){
 
 // ===============auxiliares===============
 
- 
+
+int cmp_palavra_nome_bsearch(const void *a, const void*b){
+    tPalavra *palavra = *(tPalavra**)b;
+    return (strcmp((char*)a, palavra->palavra));
+}
+
+int cmp_palavra_nome_qsort(const void *a, const void *b){
+    tPalavra *palavra1 = *(tPalavra**)a;
+    tPalavra *palavra2 = *(tPalavra**)b;
+    return (strcmp(palavra1->palavra, palavra2->palavra));
+}
+
+int cmp_palavra_idx_qsort(const void *a, const void *b){
+    tPalavra *palavra1 = *(tPalavra**)a;
+    tPalavra *palavra2 = *(tPalavra**)b;
+    return (palavra1->idx - palavra2->idx);
+}
+
 int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]){
-    int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
-    int i = 0;
-    for(i=0; i<qtd_palavras; i++){
-        if(strcmp(pp_Palavras[i]->palavra, palavra) == 0){
-            return i;
-        }
+    tPalavra **resultado;
+    int tam = Get_Or_Set_Valor('p', "get", null), idx = 0;
+
+    qsort(pp_Palavras, tam, sizeof(tPalavra*), cmp_palavra_nome_qsort);
+    resultado = bsearch(palavra, pp_Palavras, tam, sizeof(tPalavra*), cmp_palavra_nome_bsearch);
+
+    if(resultado){
+        tPalavra *paux = *(tPalavra**)resultado;
+        idx = paux->idx;
     }
-    return -1;
+    else{
+        idx = -1;
+    }
+    qsort(pp_Palavras, tam, sizeof(tPalavra*), cmp_palavra_idx_qsort);
+    return idx;
 }
 
 
@@ -403,10 +427,14 @@ int Cmp_frequencia_Palavras(const void *p1, const void *p2){
 }
 
 //varre todas as palavras com strcmp
+
+/*
 int VerificaPalavraExiste(tPalavra **pp_Palavras, char nome[]){
     int qtdPalavra = 0, i = 0, igual = 0;
     qtdPalavra = Get_Or_Set_Valor('p', "get", null);
     
+
+
     for(i = 0; i < qtdPalavra; i++){
         igual = strcmp(pp_Palavras[i]->palavra, nome);
         if(igual == 0){
@@ -414,7 +442,7 @@ int VerificaPalavraExiste(tPalavra **pp_Palavras, char nome[]){
         }
     }
     return -1;
-}
+}*/
 
 
 

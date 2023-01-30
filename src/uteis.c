@@ -255,7 +255,7 @@ void RelatorioPalavra(tPalavra **pp_Palavras, tDocumento **pp_Docs){
 
     //garante que a palavra sera valida e ja sai com o indice dela no array
     while (TRUE){
-        idx_palavra = VerificaPalavraExiste(pp_Palavras, nome);
+        idx_palavra = Retorna_Idx_Palavra(pp_Palavras, nome);
         if(idx_palavra != -1){
             break;
         }
@@ -364,12 +364,11 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
     
     qtd_Docs = Get_Or_Set_Valor('d', "get", null);
     printf("Digite as palavras que deseja buscar, ex: palavra1 palavra2 palavra3(ENTER)  \n");
-    
+
     //pega os indices das palavras
     while(TRUE){
         scanf("%s", palavra);
         idx_aux = Retorna_Idx_Palavra(pp_Palavras, palavra);
-
         if (idx_aux != -1){
             encontrou = 1;
             if(primeiro){
@@ -393,17 +392,14 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
         free(idx_palavra);
         return;
     }
-
     TF_IDF_docs = malloc(sizeof(double) * qtd_Docs);
     aux_TF_IDF_docs = malloc(sizeof(double) * qtd_Docs);
     acessados = malloc(sizeof(int) * qtd_Docs);
-
     for(i = 0; i < qtd_Docs; i++){
         acessados[i] = 0;
         TF_IDF_docs[i] = calculaSomatorio_TF_IDF(pp_Docs[i], pp_Palavras ,idx_palavra, qtd_palavras_buscador, i);
         aux_TF_IDF_docs[i] = TF_IDF_docs[i];
     }
-
     qsort(TF_IDF_docs, qtd_Docs, sizeof(double), Cmp_TF_IDF);    
     printf("\ntop 10 documentos com maior TF-IDF das palavras selecionadas\n");
     for(i = 0; i < qtd_Docs; i++){
@@ -415,11 +411,14 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
             }
         }    
     }
-    
+    LiberaBuscador(TF_IDF_docs, aux_TF_IDF_docs, acessados, idx_palavra);
+}
+
+void LiberaBuscador(double* TF_IDF_docs, double* aux_TF_IDF_docs, int* acessados, int* idx_palavra){
     free(TF_IDF_docs);
     free(aux_TF_IDF_docs);
     free(acessados);
-    free(idx_palavra);
+    free(idx_palavra);   
 }
 
 int Cmp_TF_IDF(const void* f1, const void* f2){
@@ -455,6 +454,7 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
         scanf("%s", palavra);
         idx_aux = Retorna_Idx_Palavra(pp_Palavras, palavra);
         if (idx_aux != -1){
+            
             pos_palavra_no_idx_palavra = VerificaPalavraJaDigitada(idx_palavra, idx_aux, qtd_palavras_classificador);
             if(pos_palavra_no_idx_palavra == -1){
                 encontrou = 1;
@@ -479,6 +479,7 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
         return;
     }
 
+    printf("sai da leitura\n");
     pDoc_Digitadas = InicializaDocumentoClassificador(idx_palavra, qtd_palavras_classificador);
     
     //calculo da distancia
@@ -490,6 +491,7 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
     pResultadosCos = calloc(sizeof(double), qtd_docs);
     p_aux_ResultadosCos = calloc(sizeof(double), qtd_docs);
 
+    
     for(i = 0; i < qtd_docs; i++){
         pResultadosCos[i] = CalculaDistanciaPorCos(pDoc_Digitadas, pp_Docs[i], i, pp_Palavras, p_frequencia, qtd_palavras_classificador);
         p_aux_ResultadosCos[i] = pResultadosCos[i];
@@ -522,6 +524,14 @@ int Cmp_Distancia_Docs(const void *d1, const void *d2){
     }
     return 0;
 }
+
+
+
+
+
+
+
+
 
 int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador){
     int i = 0, pos = 0, existe = 0;    

@@ -292,7 +292,7 @@ void ImprimeResultadoClassificador(tDocumento** pp_Docs, double* pResultadosCos,
     for(i = 0; i < k; i++){
         for(idx_doc = 0; idx_doc < qtd_docs; idx_doc++){
             if ((pResultadosCos[i] == p_aux_ResultadosCos[idx_doc]) && (pAcessados[idx_doc] == 0)){
-                printf("doc[%d] %s   %.4lf\n", idx_doc, pp_Docs[idx_doc]->nome_documento, pResultadosCos[i]);
+                printf("doc[%d] %s   %lf\n", idx_doc, pp_Docs[idx_doc]->nome_documento, pResultadosCos[i]);
                 pAcessados[idx_doc] = 1;
                 AdicionaPresencaEmGenero(pp_Docs[idx_doc]->tipo, pp_UnicoGeneros, pPresencasEmCadaGenero, qtd_generos);
                 break;
