@@ -35,8 +35,8 @@ void LiberaAuxiliaresClassificador(tDocumento *pDoc_Digitadas, int *idx_palavra,
 void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k);
 double CalculaDistanciaPorCos(tDocumento* pDoc_Digitadas, tDocumento* p_Doc, int idx_doc, tPalavra** pp_Palavras, double* p_frequencia, int qtd_palavras_classificador);
 int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador);
-double CalculaSomatorioNumerador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc,  int qtd_palavras_classificador, double *a, double *b);
-double CalculaSomatorioDenominador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, double* p_TFIDF_palavra_em_doc, int qtd_palavras_classificador);
+double CalculaSomatorioNumerador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc,  int qtd_palavras_total_classificador, double *a, double *b);
+double CalculaSomatorioDenominador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, double* p_TFIDF_palavra_em_doc, int qtd_palavras_total_classificador);
 int Cmp_Distancia_Docs(const void *d1, const void *d2);
 int GaranteOpcaoValida();
 int OpcaoValida(int opcao);
@@ -53,5 +53,7 @@ int OpcaoValida(int opcao);
               y1                        y2
 
 */
+
+
 
 #endif

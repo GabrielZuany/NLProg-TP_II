@@ -3,6 +3,7 @@
         "*.tcc": "c",
         "tdocumento.h": "c",
         "tpalavra.h": "c",
-        "limits": "c"
+        "limits": "c",
+        "cstdlib": "cpp"
     }
 }

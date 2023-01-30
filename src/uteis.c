@@ -358,7 +358,7 @@ int Calcula_Frequencia_Palavra_no_TipoNoticia(tDocumento** pp_Docs, tPalavra* p_
 // ------------ BUSCADOR ---------------    
 void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
     double *TF_IDF_docs = NULL, *aux_TF_IDF_docs = NULL;
-    int encontrou = 0, qtd_palavras_buscador = 0, idx_aux = 0, i = 0, j = 0, qtd_Docs = 0;
+    int encontrou = 0, qtd_palavras_buscador = 0, idx_aux = 0, i = 0, j = 0, qtd_Docs = 0, primeiro  = 1;
     int* idx_palavra = malloc(sizeof(int)), *acessados =  NULL;
     char palavra[100], lixo = '\0';
     
@@ -372,6 +372,11 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
 
         if (idx_aux != -1){
             encontrou = 1;
+            if(primeiro){
+                printf("idx palavra(s): ");
+                primeiro = 0;
+            }
+            printf("%d ", idx_aux);
             idx_palavra[qtd_palavras_buscador] = idx_aux;
             qtd_palavras_buscador++;
             idx_palavra = (int*)realloc(idx_palavra, (sizeof(int) * (qtd_palavras_buscador + 1)));
@@ -382,8 +387,10 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
             break;
         }
     }
+    printf("\n");
     if(!encontrou){
         printf(">>> Nao foi encontrada nenhuma palavra inserida.\n");
+        free(idx_palavra);
         return;
     }
 
@@ -396,8 +403,8 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
         TF_IDF_docs[i] = calculaSomatorio_TF_IDF(pp_Docs[i], pp_Palavras ,idx_palavra, qtd_palavras_buscador, i);
         aux_TF_IDF_docs[i] = TF_IDF_docs[i];
     }
-    qsort(TF_IDF_docs, qtd_Docs, sizeof(double), Cmp_TF_IDF);
-        
+
+    qsort(TF_IDF_docs, qtd_Docs, sizeof(double), Cmp_TF_IDF);    
     printf("\ntop 10 documentos com maior TF-IDF das palavras selecionadas\n");
     for(i = 0; i < qtd_Docs; i++){
         for(j = 0; j < qtd_Docs; j++){
@@ -471,6 +478,7 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
         free(p_frequencia);
         return;
     }
+
     pDoc_Digitadas = InicializaDocumentoClassificador(idx_palavra, qtd_palavras_classificador);
     
     //calculo da distancia
@@ -489,9 +497,7 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
 
     }
     qsort(pResultadosCos, qtd_docs, sizeof(double), Cmp_Distancia_Docs);
-
     ImprimeResultadoClassificador(pp_Docs, pResultadosCos, p_aux_ResultadosCos, pAcessados, qtd_docs, k);
-    ImprimeUmDocumento(pDoc_Digitadas);
     LiberaAuxiliaresClassificador(pDoc_Digitadas, idx_palavra, p_frequencia, pResultadosCos, p_aux_ResultadosCos, pAcessados);
 }
 
@@ -518,7 +524,7 @@ int Cmp_Distancia_Docs(const void *d1, const void *d2){
 }
 
 int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador){
-    int i = 0, pos = 0, existe = 0;
+    int i = 0, pos = 0, existe = 0;    
     for(i=0; i<qtd_palavras_classificador; i++){
         if(idx_aux == idx_palavra[i]){
             existe = 1;
@@ -532,35 +538,43 @@ int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_cl
 
 double CalculaDistanciaPorCos(tDocumento* pDoc_Digitadas, tDocumento* p_Doc, int idx_doc, tPalavra** pp_Palavras, double* p_frequencia, int qtd_palavras_classificador){
     double dist_entre_docs = 0.00, x = 0.00, y1 = 0.00, y2 = 0.00;
-    int i = 0, idx_palavra = 0, qtdDocs = Get_Or_Set_Valor('d', "get", null);
+    int i = 0, idx_palavra = 0, qtdDocs = Get_Or_Set_Valor('d', "get", null), qtd_palavras_total_classificador = 0;
     tPalavra* p_temp_palavra = NULL;
-    double *p_TFIDF_palavra_em_doc1 = calloc(sizeof(double), qtd_palavras_classificador);
-    double *p_TFIDF_palavra_em_doc2 = calloc(sizeof(double), qtd_palavras_classificador);
+    int *p_idx_palavra_em_ambos = NULL;
 
-    for(i = 0; i < qtd_palavras_classificador; i++){
-        idx_palavra = Retorna_Idx_Palavra_ViaDoc(pDoc_Digitadas, i);
-        p_temp_palavra = pp_Palavras[idx_palavra];
-      
-        p_TFIDF_palavra_em_doc1[i] = Calcula_TF_IDF(p_frequencia[i], qtdDocs, Calcula_EmQuantosDocumentosEstaPresente(p_temp_palavra, qtdDocs));
+    p_idx_palavra_em_ambos = CalculaTodasAsPalavrasNosDocsXY(pDoc_Digitadas, p_Doc, qtd_palavras_classificador, &qtd_palavras_total_classificador);
+    double *p_TFIDF_palavra_em_doc1 = calloc(sizeof(double), qtd_palavras_total_classificador);
+    double *p_TFIDF_palavra_em_doc2 = calloc(sizeof(double), qtd_palavras_total_classificador);
+
+    for(i = 0; i < qtd_palavras_total_classificador; i++){
+        p_temp_palavra = pp_Palavras[p_idx_palavra_em_ambos[i]];
+
         p_TFIDF_palavra_em_doc2[i] = Acesso_TF_IDF_NoDocX(p_temp_palavra, idx_doc);
+        if (i < qtd_palavras_classificador){
+            p_TFIDF_palavra_em_doc1[i] = Calcula_TF_IDF(p_frequencia[i], qtdDocs, Calcula_EmQuantosDocumentosEstaPresente(p_temp_palavra, qtdDocs));
+            continue;
+        }
+        p_TFIDF_palavra_em_doc1[i] = 0.00;
 
     }
 
-    x = CalculaSomatorioNumerador(pDoc_Digitadas, p_Doc, qtd_palavras_classificador, p_TFIDF_palavra_em_doc1, p_TFIDF_palavra_em_doc2);
-    y1 = CalculaSomatorioDenominador(pDoc_Digitadas, p_Doc, p_TFIDF_palavra_em_doc1, qtd_palavras_classificador);
-    y2 = CalculaSomatorioDenominador(pDoc_Digitadas, p_Doc, p_TFIDF_palavra_em_doc2, qtd_palavras_classificador);
-    
+    x = CalculaSomatorioNumerador(pDoc_Digitadas, p_Doc, qtd_palavras_total_classificador, p_TFIDF_palavra_em_doc1, p_TFIDF_palavra_em_doc2);
+    y1 = CalculaSomatorioDenominador(pDoc_Digitadas, p_Doc, p_TFIDF_palavra_em_doc1, qtd_palavras_total_classificador);
+    y2 = CalculaSomatorioDenominador(pDoc_Digitadas, p_Doc, p_TFIDF_palavra_em_doc2, qtd_palavras_total_classificador);
+
+
+    free(p_idx_palavra_em_ambos);
     free(p_TFIDF_palavra_em_doc1);
     free(p_TFIDF_palavra_em_doc2);
     
     if((y1 * y2) == 0){
-        return 0.00;
+        //return 0.00;
     }
     dist_entre_docs = (x /(y1*y2));
     return dist_entre_docs;
 }
 
-double CalculaSomatorioNumerador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc,  int qtd_palavras_classificador, double *a, double *b){
+double CalculaSomatorioNumerador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc,  int qtd_palavras_total_classificador, double *a, double *b){
     //         E[tf-idf(w,dx) * tfidf-(w, di)]
     //           -----v-----    -------v------
     //                a[w]             b[w]
@@ -568,24 +582,25 @@ double CalculaSomatorioNumerador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, 
     double somatorio = 0.00;
     int i = 0;
 
-    for(i = 0; i < qtd_palavras_classificador; i++){
+    for(i = 0; i < qtd_palavras_total_classificador; i++){
         somatorio += (a[i] * b[i]);
     }
     return somatorio;
 }
 
-double CalculaSomatorioDenominador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, double* p_TFIDF_palavra_em_doc, int qtd_palavras_classificador){
+double CalculaSomatorioDenominador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, double* p_TFIDF_palavra_em_doc, int qtd_palavras_total_classificador){
     // sqrt[E(tf-idf(w,d1)^2)] 
     //  ----------v------------   
     //            y 
     
     int i = 0;
     double somatorio = 0.00;
-    for(i=0; i<qtd_palavras_classificador; i++){
+    for(i=0; i<qtd_palavras_total_classificador; i++){
         somatorio = somatorio + (p_TFIDF_palavra_em_doc[i] * p_TFIDF_palavra_em_doc[i]);
     }
     return (somatorio);
 }
+
 
 //--------
 int GaranteOpcaoValida(){

@@ -292,6 +292,7 @@ void ImprimeResultadoClassificador(tDocumento** pp_Docs, double* pResultadosCos,
     for(i = 0; i < k; i++){
         for(idx_doc = 0; idx_doc < qtd_docs; idx_doc++){
             if ((pResultadosCos[i] == p_aux_ResultadosCos[idx_doc]) && (pAcessados[idx_doc] == 0)){
+                printf("doc[%d] %s   %.4lf\n", idx_doc, pp_Docs[idx_doc]->nome_documento, pResultadosCos[i]);
                 pAcessados[idx_doc] = 1;
                 AdicionaPresencaEmGenero(pp_Docs[idx_doc]->tipo, pp_UnicoGeneros, pPresencasEmCadaGenero, qtd_generos);
                 break;
@@ -348,4 +349,34 @@ int ExistePalavraEmDoc(int idx_palavra, tDocumento* p_Doc){
 
 int Retorna_Idx_Palavra_ViaDoc(tDocumento* pDoc_Digitadas, int i){
     return pDoc_Digitadas->idx_palavras[i];
+}
+
+int *CalculaTodasAsPalavrasNosDocsXY(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, int qtd_palavras_classificador, int *qtd_palavras_total_classificador){
+    int i = 0, qtd_palavra_doc2 = 0;
+    qtd_palavra_doc2 = p_Doc->qtd_palavras_contidas;
+    int *pAux = malloc(sizeof(int) * (qtd_palavras_classificador + qtd_palavra_doc2));
+
+    for(i = 0; i < qtd_palavras_classificador; i++){
+        pAux[i] = pDoc_Digitadas->idx_palavras[i];
+    }
+    *(qtd_palavras_total_classificador) = i;
+    
+
+    for(i = 0; i < qtd_palavra_doc2; i++){
+        if(!ExistePalavraNoDoc(p_Doc->idx_palavras[i], pDoc_Digitadas)){
+            pAux[*(qtd_palavras_total_classificador)] = p_Doc->idx_palavras[i];
+            *(qtd_palavras_total_classificador) = *(qtd_palavras_total_classificador) + 1;
+        }
+    } 
+    return pAux;
+}
+
+int ExistePalavraNoDoc(int idx_palavra, tDocumento *pDoc){
+    int i = 0;
+    for(i = 0; i < pDoc->qtd_palavras_contidas; i++){
+        if (idx_palavra == pDoc->idx_palavras[i]){
+            return 1;
+        }
+    }
+    return 0;
 }

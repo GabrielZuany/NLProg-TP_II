@@ -45,5 +45,7 @@ void AdicionaPresencaEmGenero(char* genero, char** pp_UnicoGeneros, int* pPresen
 void ImprimeGeneroComMaisPresencas(char **pp_UnicoGeneros, int *pPresencasEmCadaGenero, int qtd_generos, int k);
 int ExistePalavraEmDoc(int idx_palavra, tDocumento* p_Doc);
 int Retorna_Idx_Palavra_ViaDoc(tDocumento* pDoc_Digitadas, int i);
+int *CalculaTodasAsPalavrasNosDocsXY(tDocumento *pDoc_Digitadas, tDocumento *p_Doc, int qtd_palavras_classificador, int *qtd_palavras_total_classificador);
+int ExistePalavraNoDoc(int idx_palavra, tDocumento *pDoc);
 
 #endif

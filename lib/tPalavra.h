@@ -5,7 +5,7 @@
 
 typedef struct tPalavra tPalavra;
 
-//inicializacao
+//-----------inicializacao------------
 tPalavra** Inicializa_Array_Palavra();
 tPalavra* Inicializa_Palavra(char str[], int qtd_docs, int idxPalavra);
 
@@ -53,7 +53,8 @@ void ImprimePalavras(tPalavra **pp_Palavras);
 
 //-----------auxiliares--------------------- 
 void ResetaString(char str[]);
-int ComparaPalavras(const void *p1, const void *p2);
+//int ComparaPalavras(const void *p1, const void *p2);
+int Acesso_Idx_Palavra(tPalavra* palavra);
 int PalavraRegistrada(tPalavra **pp_Palavras, int qtdPalavras, char palavra[]);
 int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]);
 int Get_Qtd_Palavras_No_Doc(tPalavra** pp_Palavras, int idx_doc);

@@ -9,6 +9,8 @@ DiretorioEntrada=datasets/tiny/train.txt
 PROG1=exe1
 PROG2=exe2
 
+all: exe1 exe2
+
 teste1:
 	@echo $(pontosC)
 

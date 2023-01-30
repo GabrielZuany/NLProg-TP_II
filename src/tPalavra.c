@@ -55,7 +55,6 @@ tPalavra** LeArquivo(FILE* fArquivo, tPalavra **pp_Palavras, int idxDocumento){
     qtdDocumentos = Get_Or_Set_Valor('d', "get", null);
     
     while(fscanf(fArquivo,"%s", str) == 1){
-        
         if(!(PalavraRegistrada(pp_Palavras, (idxPalavra), str))){
             pp_Palavras = (tPalavra**)realloc(pp_Palavras, sizeof(tPalavra*) * (idxPalavra + 2));
             p_palavra = Inicializa_Palavra(str, qtdDocumentos, idxPalavra);
@@ -137,15 +136,8 @@ tPalavra* Inicializa_Palavra(char str[], int qtd_docs, int idxPalavra){
 }
 
 // ===============auxiliares===============
-int ComparaPalavras(const void *p1, const void *p2){
-    const struct tPalavra *palavra1 = p1;
-    const struct tPalavra *palavra2 = p2;
-    if(strcmp(palavra1->palavra, palavra2->palavra) == 0){
-        return 1;
-    }
-    return 0;
-}
 
+ 
 int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]){
     int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
     int i = 0;
@@ -156,6 +148,8 @@ int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]){
     }
     return -1;
 }
+
+
 
 int PalavraRegistrada(tPalavra **pp_Palavras, int qtdPalavras, char palavra[]){
     int i = 0;
@@ -428,7 +422,10 @@ int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos){
     return p_Palavra->pFrenquencia[pos];
 }
 
-
 double Acesso_TF_IDF_NoDocX(tPalavra* p_palavra, int idx_documento){
     return p_palavra->pTF_IDF[idx_documento];
+}
+
+int Acesso_Idx_Palavra(tPalavra* palavra){
+    return palavra->idx;
 }
