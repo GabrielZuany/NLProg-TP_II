@@ -548,7 +548,7 @@ int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_cl
 
 double CalculaDistanciaPorCos(tDocumento* pDoc_Digitadas, tDocumento* p_Doc, int idx_doc, tPalavra** pp_Palavras, double* p_frequencia, int qtd_palavras_classificador){
     double dist_entre_docs = 0.00, x = 0.00, y1 = 0.00, y2 = 0.00;
-    int i = 0, idx_palavra = 0, qtdDocs = Get_Or_Set_Valor('d', "get", null), qtd_palavras_total_classificador = 0;
+    int i = 0, qtdDocs = Get_Or_Set_Valor('d', "get", null), qtd_palavras_total_classificador = 0;
     tPalavra* p_temp_palavra = NULL;
     int *p_idx_palavra_em_ambos = NULL;
 

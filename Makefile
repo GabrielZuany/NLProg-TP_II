@@ -1,35 +1,37 @@
 CC=gcc
-FLAGS=-lm 
-pontosH=lib/*.h
-pontosC=src/tDocumento.c src/tPalavra.c src/uteis.c
-#k = segunda entrada
-K=2
-DiretorioBinario=out.bin
-DiretorioEntrada=datasets/tiny/train.txt
-PROG1=exe1
-PROG2=exe2
+FLAGS=-c -lm -Wall -pedantic
+DEPS = $(wildcard lib/*.h)
+OBJ = $(wildcard objects/*.o)
+SRC = $(wildcard src/*.c)
+EXE = exe_prog1 exe_prog2
+OBJ_Prog1 = objects/prog1.o objects/tDocumento.o objects/tPalavra.o objects/uteis.o
+OBJ_Prog2 = objects/prog2.o objects/tDocumento.o objects/tPalavra.o objects/uteis.o
 
-all: exe1 exe2
+all: CreateFolder Compile prog1 prog2
 
-teste1:
-	@echo $(pontosC)
+Compile $(DEPS):
+	@$(CC) -o objects/prog1.o src/prog1.c $(FLAGS)
+	@$(CC) -o objects/prog2.o src/prog2.c $(FLAGS)
+	@$(CC) -o objects/uteis.o src/uteis.c $(FLAGS)
+	@$(CC) -o objects/tDocumento.o src/tDocumento.c $(FLAGS)
+	@$(CC) -o objects/tPalavra.o src/tPalavra.c $(FLAGS)
+	@echo compilado objects!
 
-compile1: 
-	@$(CC) -o $(PROG1) src/prog1.c $(pontosC) $(FLAGS)
-	@echo compilado!
+prog1:
+	@$(CC) -o exe_prog1 $(OBJ_Prog1) -lm
+	@echo compilado executavel prog1!
 
-exe1: compile1
-	@./$(PROG1) $(DiretorioEntrada) $(DiretorioBinario)
+prog2:
+	@$(CC) -o exe_prog2 $(OBJ_Prog2) -lm
+	@echo compilado executavel prog1!
 
-vexe1: compile1
-	@valgrind --leak-check=full -s ./$(PROG1) $(DiretorioEntrada) $(DiretorioBinario)
+CreateFolder:
+	@mkdir -p objects
 
-compile2:
-	@$(CC) -o $(PROG2) src/prog2.c $(pontosC) $(FLAGS)
-	@echo compilado!
-
-exe2: compile2
-	@./$(PROG2) $(DiretorioBinario) $(K)
-
-vexe2: compile2
-	@valgrind --leak-check=full  --show-leak-kinds=all -s ./$(PROG2) $(DiretorioBinario) $(K)
+clean:
+	@rm -rf objects && rm -rf exe_prog1 && rm -rf exe_prog2
+	@echo removidos!
+	
+#K=2
+#DiretorioBinario=out.bin
+#DiretorioEntrada=datasets/tiny/train.txt
