@@ -58,4 +58,7 @@ int main(int argc, char *argv[]){
 1.0 - implementar bsc.
 2.0 - makefile
 3.0 - comentar ponto.h
+
+VerificaPalavraExiste
+
 */
