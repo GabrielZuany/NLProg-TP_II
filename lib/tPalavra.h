@@ -130,5 +130,6 @@ void RelatorioPalavra_frequencia(tPalavra **pp_Palavras, int qtd_docs, int idx_p
 int EncontraDocumentoComFrequenciaX(tPalavra *p_palavra, int frequencia, int *pAcessada, int qtd_docs);
 
 
-
+int cmp_palavra_nome_bsearch(const void *a, const void*b);
+int cmp_palavra_nome_qsort(const void *a, const void *b);
 #endif

@@ -40,7 +40,7 @@ double CalculaSomatorioDenominador(tDocumento *pDoc_Digitadas, tDocumento *p_Doc
 int Cmp_Distancia_Docs(const void *d1, const void *d2);
 int GaranteOpcaoValida();
 int OpcaoValida(int opcao);
-
+void LiberaBuscador(double* TF_IDF_docs, double* aux_TF_IDF_docs, int* acessados, int* idx_palavra);
 
 /*
                             X
