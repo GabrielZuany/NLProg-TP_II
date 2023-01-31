@@ -23,7 +23,7 @@ prog1:
 
 prog2:
 	@$(CC) -o exe_prog2 $(OBJ_Prog2) -lm
-	@echo compilado executavel prog1!
+	@echo compilado executavel prog2!
 
 CreateFolder:
 	@mkdir -p objects
