@@ -35,3 +35,5 @@ clean:
 #K=2
 #DiretorioBinario=out.bin
 #DiretorioEntrada=datasets/tiny/train.txt
+#porg1: ./exe_prog1 datasets/tiny/train.txt out.bin
+#prog2: ./exe_prog2 out.bin 14
