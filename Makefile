@@ -7,7 +7,7 @@ EXE = exe_prog1 exe_prog2
 OBJ_Prog1 = objects/prog1.o objects/tDocumento.o objects/tPalavra.o objects/uteis.o
 OBJ_Prog2 = objects/prog2.o objects/tDocumento.o objects/tPalavra.o objects/uteis.o
 
-all: prog1 prog2
+all: libs_a prog1 prog2
 
 Compile $(DEPS): CreateFolder
 	@$(CC) -o objects/prog1.o prog1.c $(FLAGS)
@@ -17,11 +17,15 @@ Compile $(DEPS): CreateFolder
 	@$(CC) -o objects/uteis.o src/uteis.c $(FLAGS)
 	@echo compilado objects!
 
-prog1: Compile
+libs_a: Compile
+	@ar -rcs libsTP2.a $(OBJ)
+	@echo compilado libsTP2.a!
+
+prog1: Compile libs_a
 	@$(CC) -o exe_prog1 $(OBJ_Prog1) -lm
 	@echo compilado executavel prog1!
 
-prog2: Compile
+prog2: Compile libs_a
 	@$(CC) -o exe_prog2 $(OBJ_Prog2) -lm
 	@echo compilado executavel prog2!
 
@@ -30,8 +34,9 @@ CreateFolder:
 
 clean:
 	@rm -rf objects && rm -rf exe_prog1 && rm -rf exe_prog2
-	@rm *.bin
+	@rm -rf *.a
 	@echo removidos!
+	@rm *.bin
 	
 #K=2
 #DiretorioBinario=out.bin

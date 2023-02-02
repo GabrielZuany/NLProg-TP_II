@@ -3,6 +3,7 @@
 
 int main(int argc, char *argv[]){
     //prepara e confere os diretorios
+    printf("entramos prog1\n");
     if(argc <= 2){
         printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
         printf("ex:  ./indice data/train.txt  indice.bin\n");
@@ -59,7 +60,7 @@ int main(int argc, char *argv[]){
     fclose(fBin);
     
     //ImprimePalavras(pp_Palavras);
-    //Teste_ImprimeDocumentos(pp_Docs);
+    //ImprimeDocumentos(pp_Docs);
 
     printf("------\n-> Qtd documentos: %d\n-> Qtd palavras diferentes: %d\n-------\n", Get_Or_Set_Valor('d', "get", null), Get_Or_Set_Valor('p', "get", null));
 

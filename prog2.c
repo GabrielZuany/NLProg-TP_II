@@ -1,10 +1,9 @@
 #include "lib/lib.h"
 
 int main(int argc, char *argv[]){
-    printf("entramos prog2\n");
     // input: ./prog2 indice.bin K
     //prepara e confere os diretorios
-    if(argc <= 1){
+    if(argc <= 2){
         printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
         printf("ex:  ./prog2 arq.bin K\n");
         exit(0);
@@ -48,7 +47,6 @@ int main(int argc, char *argv[]){
     //liberacao
     LiberaDocs(pp_Docs);
     LiberaPalavras(pp_Palavras);
-    printf("k: %d\n", k);
     printf("programa 2 encerrado com sucesso!\n");
     return 0;
 }
