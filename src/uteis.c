@@ -69,8 +69,9 @@ void ConfereEntradaValida(char entrada[], char modo[]){
         printf("\nERRO: nao foi possivel abrir o arquivo\n");
         printf("programa 1) ex:  ./exe1 data/train.txt  indice.bin\n");
         printf("programa 2) ex: ./exe2 out.bin K\n\n\n");
-        exit(EXIT_FAILURE);
+        exit(0);
     }
+
     fclose(fteste);
 }
 
@@ -402,7 +403,10 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
     }
     qsort(TF_IDF_docs, qtd_Docs, sizeof(double), Cmp_TF_IDF);    
     printf("\ntop 10 documentos com maior TF-IDF das palavras selecionadas\n");
-    for(i = 0; i < qtd_Docs; i++){
+    for(i = 0; (i < qtd_Docs) && (i < 10); i++){
+        if (TF_IDF_docs[i] == (double)0.0000){
+            break;
+        }
         for(j = 0; j < qtd_Docs; j++){
             if(TF_IDF_docs[i] == aux_TF_IDF_docs[j] && !(acessados[j])){
                 acessados[j] = 1;

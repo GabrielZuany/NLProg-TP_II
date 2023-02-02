@@ -81,9 +81,11 @@ FILE* Get_ArquivoNoticia(char linha[], char argv[]){
     ResetaStrComTam(str, 1000);
     ResetaStrComTam(diretorio, 1000);
     ResetaStrComTam(caminho, 100);
+
     // ---- nome e tipo de noticia -----
     char tipo[100], nome_arq[100];
     ResetaStrComTam(nome_arq, 100);
+
     sscanf(linha, "%[^ ]", caminho);
     sscanf(linha, "%*[^/]%*c%[^ ]", nome_arq);
     sscanf(linha, "%*[^ ]%*c%s", tipo);    
@@ -92,13 +94,23 @@ FILE* Get_ArquivoNoticia(char linha[], char argv[]){
     Get_Set_NomeArquivos("set", nome_arq, null);
     Get_Set_TipoNoticia("set", tipo, null);
 
-
     int fim = 0;
+    char aux[1] = {'\0'};
+
+    sscanf(argv_copy, "%c", &aux[0]);
+    
+    if(aux[0] == '/'){
+        strcat(diretorio, "/");
+        sscanf(argv_copy,"%*c%s", argv_copy);
+    }
+
     while(1){
         ResetaStrComTam(str, 1000);
+
         sscanf(argv_copy, "%[^/]", str);
         sscanf(argv_copy,"%*[^/]%*c%s", argv_copy);
         fim = ConfereTxt(str);
+        
         if(fim){
             strcat(diretorio, caminho);
             break;
@@ -106,7 +118,7 @@ FILE* Get_ArquivoNoticia(char linha[], char argv[]){
         strcat(diretorio, str);
         strcat(diretorio, "/");
     }
-
+    
     ConfereEntradaValida(diretorio, "r");
     FILE *fArquivo = fopen(diretorio, "r");
     return fArquivo;
