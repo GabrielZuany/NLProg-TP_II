@@ -7,21 +7,21 @@ EXE = exe_prog1 exe_prog2
 OBJ_Prog1 = objects/prog1.o objects/tDocumento.o objects/tPalavra.o objects/uteis.o
 OBJ_Prog2 = objects/prog2.o objects/tDocumento.o objects/tPalavra.o objects/uteis.o
 
-all: CreateFolder Compile prog1 prog2
+all: prog1 prog2
 
-Compile $(DEPS):
-	@$(CC) -o objects/prog1.o src/prog1.c $(FLAGS)
-	@$(CC) -o objects/prog2.o src/prog2.c $(FLAGS)
-	@$(CC) -o objects/uteis.o src/uteis.c $(FLAGS)
+Compile $(DEPS): CreateFolder
+	@$(CC) -o objects/prog1.o prog1.c $(FLAGS)
+	@$(CC) -o objects/prog2.o prog2.c $(FLAGS)
 	@$(CC) -o objects/tDocumento.o src/tDocumento.c $(FLAGS)
 	@$(CC) -o objects/tPalavra.o src/tPalavra.c $(FLAGS)
+	@$(CC) -o objects/uteis.o src/uteis.c $(FLAGS)
 	@echo compilado objects!
 
-prog1:
+prog1: Compile
 	@$(CC) -o exe_prog1 $(OBJ_Prog1) -lm
 	@echo compilado executavel prog1!
 
-prog2:
+prog2: Compile
 	@$(CC) -o exe_prog2 $(OBJ_Prog2) -lm
 	@echo compilado executavel prog2!
 
@@ -30,6 +30,7 @@ CreateFolder:
 
 clean:
 	@rm -rf objects && rm -rf exe_prog1 && rm -rf exe_prog2
+	@rm *.bin
 	@echo removidos!
 	
 #K=2
