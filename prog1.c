@@ -3,11 +3,12 @@
 
 int main(int argc, char *argv[]){
     //prepara e confere os diretorios
-    if(argc <= 1){
+    if(argc <= 2){
         printf("ERRO: O diretorio de arquivos de configuracao nao foi informado\n");
         printf("ex:  ./indice data/train.txt  indice.bin\n");
         exit(0);
     }
+
     ConfereEntradaValida(argv[1], "r");
     char entrada[100] = "";
     char saida[100] = "";
