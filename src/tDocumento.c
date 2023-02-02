@@ -249,7 +249,7 @@ void RelatorioDocumento(tDocumento** pp_Docs){
 
 
 //============novas
-void Teste_ImprimeDocumentos(tDocumento **pp_Docs){
+void ImprimeDocumentos(tDocumento **pp_Docs){
     int qtd_Docs = 0, iDoc = 0;
     qtd_Docs = Get_Or_Set_Valor('d', "get", null);
     int iPalavra = 0;

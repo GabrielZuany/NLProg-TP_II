@@ -68,7 +68,7 @@ void ConfereEntradaValida(char entrada[], char modo[]){
     if(!(fteste)){
         printf("\nERRO: nao foi possivel abrir o arquivo\n");
         printf("programa 1) ex:  ./exe1 data/train.txt  indice.bin\n");
-        printf("programa 2) ex: ./exe2 ArquivosBinarios/indice.bin K\n\n\n");
+        printf("programa 2) ex: ./exe2 out.bin K\n\n\n");
         exit(EXIT_FAILURE);
     }
     fclose(fteste);
@@ -402,10 +402,7 @@ void Buscador(tDocumento** pp_Docs, tPalavra** pp_Palavras){
     }
     qsort(TF_IDF_docs, qtd_Docs, sizeof(double), Cmp_TF_IDF);    
     printf("\ntop 10 documentos com maior TF-IDF das palavras selecionadas\n");
-    for(i = 0; (i < 10) && (i < qtd_Docs); i++){
-        if(TF_IDF_docs[i] == (double) 0){
-            break;
-        }
+    for(i = 0; i < qtd_Docs; i++){
         for(j = 0; j < qtd_Docs; j++){
             if(TF_IDF_docs[i] == aux_TF_IDF_docs[j] && !(acessados[j])){
                 acessados[j] = 1;
@@ -482,6 +479,7 @@ void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k){
         return;
     }
 
+    printf("sai da leitura\n");
     pDoc_Digitadas = InicializaDocumentoClassificador(idx_palavra, qtd_palavras_classificador);
     
     //calculo da distancia
@@ -526,6 +524,14 @@ int Cmp_Distancia_Docs(const void *d1, const void *d2){
     }
     return 0;
 }
+
+
+
+
+
+
+
+
 
 int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador){
     int i = 0, pos = 0, existe = 0;    
