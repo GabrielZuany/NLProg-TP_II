@@ -208,22 +208,6 @@ char* Get_Set_TipoNoticia(char acao[], char tipo[], int idx){
     return str;
 }
 
-int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc){
-    int i = 0, existe = 0, qtd_generos = 0;
-    qtd_generos = Get_Or_Set_Valor('g', "get", null);
-
-    for(i = 0; i < idx_doc; i++){
-        if (strcmp(pp_auxGenero[i], tipo) == 0){
-            existe = 1;
-            return 1;
-        }
-    }
-    if (!existe){
-        Get_Or_Set_Valor('g', "set", qtd_generos+1);
-    }
-    return 0;
-    printf("\n");
-}
 
 void ArmazenaAuxiliaresEmBinario(FILE * bin, int qtd_Generos){
     fwrite(&qtd_Generos, sizeof(int), 1, bin);
@@ -296,7 +280,7 @@ void  RelatorioPalavra_genero(tPalavra *p_Palavra, tDocumento **pp_Docs, int qtd
         freq_aux[i] = freq[i];
         acessado[i] = 0;
     }
-    qsort(freq, qtd_generos, sizeof(int), Cmp_Freq);
+    qsort(freq, qtd_generos, sizeof(int), Cmp_frequencia_Palavras);
     //impressao 
     printf("Impressao frequencia ordenada em generos:\n");
     for(i = 0; i < qtd_generos; i++){
@@ -319,11 +303,6 @@ void LiberacaoAuxiliaresRelatorioPalavra(char **pp_TodosGeneros,char **pp_UnicoG
     free(acessado);
 }
 
-int Cmp_Freq(const void* f1, const void* f2){
-    int freq1 = *(int*)f1;
-    int freq2 = *(int*)f2;
-    return freq2 - freq1;
-}
 
 int Armazena_Genero_Array(char **pp_TodosGeneros, char **pp_UnicoGeneros, char genero[], int idx_Docs, int iNovoGenero){
     int i = 0, existe = 0;
@@ -425,16 +404,6 @@ void LiberaBuscador(double* TF_IDF_docs, double* aux_TF_IDF_docs, int* acessados
     free(idx_palavra);   
 }
 
-int Cmp_TF_IDF(const void* f1, const void* f2){
-    double x = *(double*)f1;
-    double y = *(double*)f2;
-    if(x > y){
-        return -1;
-    }
-    if(x < y){
-        return 1;
-    }return 0;
-}
 
 double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *idx_palavra, int qtd_palavras_buscador, int idx_documento){
     double somador_tf_idf = 0;
@@ -517,17 +486,6 @@ void LiberaAuxiliaresClassificador(tDocumento *pDoc_Digitadas, int *idx_palavra,
     free(p_frequencia);
 }
 
-int Cmp_Distancia_Docs(const void *d1, const void *d2){
-    double x1 = *(double*)d1;
-    double x2 = *(double*)d2;
-    if (x2 > x1){
-        return 1;
-    }
-    if (x2 < x1){
-        return -1;
-    }
-    return 0;
-}
 
 
 
@@ -537,18 +495,7 @@ int Cmp_Distancia_Docs(const void *d1, const void *d2){
 
 
 
-int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador){
-    int i = 0, pos = 0, existe = 0;    
-    for(i=0; i<qtd_palavras_classificador; i++){
-        if(idx_aux == idx_palavra[i]){
-            existe = 1;
-            pos = i;
-            break;
-        }
-    }
-    if(!existe) pos = -1;
-    return pos;
-}
+
 
 double CalculaDistanciaPorCos(tDocumento* pDoc_Digitadas, tDocumento* p_Doc, int idx_doc, tPalavra** pp_Palavras, double* p_frequencia, int qtd_palavras_classificador){
     double dist_entre_docs = 0.00, x = 0.00, y1 = 0.00, y2 = 0.00;

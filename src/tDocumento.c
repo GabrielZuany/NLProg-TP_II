@@ -51,6 +51,7 @@ tDocumento** RegistraPalavrasNosDocumentos(tPalavra** pp_Palavras, tDocumento** 
     char **pp_auxGenero;
     pp_auxGenero = malloc(sizeof(char*) * qtd_docs);
     for(i = 0; i < qtd_docs; i++){
+        //printf("doc[%d] de %d\n", i, qtd_docs);
         pp_auxGenero[i] = malloc(sizeof(char)*5);
         ResetaStrComTam(pp_auxGenero[i], 5);
     }
@@ -76,6 +77,7 @@ tDocumento* RegistraPalavrasNoDocumentoAtual(tPalavra** pp_Palavras, int idx_doc
     char tipo[5] = "---";
     int qtd_palavras = Get_Or_Set_Valor('p', "get", null);
     strcpy(tipo, p_Doc->tipo);
+    
     for(idx_palavra = 0; idx_palavra < qtd_palavras; idx_palavra++){
         
         if(RetornaFrequenciaPalavra(pp_Palavras[idx_palavra], idx_doc) > 0){
@@ -83,6 +85,7 @@ tDocumento* RegistraPalavrasNoDocumentoAtual(tPalavra** pp_Palavras, int idx_doc
             idx_palavra_doc++;
         }
     }
+    
 
     p_Doc->qtd_palavras_contidas = idx_palavra_doc;
     return p_Doc;
@@ -103,6 +106,35 @@ char *Get_GeneroArquivo(tDocumento* p_Doc){
     //tipo = malloc(sizeof(char) * 5);
     //strcpy(tipo, p_Doc->tipo);
     return tipo;
+}
+
+int Cmp_Distancia_Docs(const void *d1, const void *d2){
+    double x1 = *(double*)d1;
+    double x2 = *(double*)d2;
+    if (x2 > x1){
+        return 1;
+    }
+    if (x2 < x1){
+        return -1;
+    }
+    return 0;
+}
+
+int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc){
+    int i = 0, existe = 0, qtd_generos = 0;
+    qtd_generos = Get_Or_Set_Valor('g', "get", null);
+
+    for(i = 0; i < idx_doc; i++){
+        if (strcmp(pp_auxGenero[i], tipo) == 0){
+            existe = 1;
+            return 1;
+        }
+    }
+    if (!existe){
+        Get_Or_Set_Valor('g', "set", qtd_generos+1);
+    }
+    return 0;
+    printf("\n");
 }
 
 //--------arquivo binario---------
