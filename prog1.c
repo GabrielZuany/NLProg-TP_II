@@ -35,6 +35,9 @@ int main(int argc, char *argv[]){
     pp_Palavras = Inicializa_Array_Palavra();
     pp_Palavras = LeTodosOsArquivosPalavra(fArquivo_caminho_noticias, pp_Palavras, qtd_Arquivos, entrada);
     fclose(fArquivo_caminho_noticias);
+    OrganizaPalavrasPorIndice(pp_Palavras, Get_Or_Set_Valor('p', "get", null));
+    
+    printf("palavras lidas\n");
 
     //inicializa documentos
     tDocumento** pp_Docs = NULL;
