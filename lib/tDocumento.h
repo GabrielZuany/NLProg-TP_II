@@ -18,6 +18,16 @@ char *Get_GeneroArquivo(tDocumento* p_Doc);
 int ExistePalavraEmDoc(int idx_palavra, tDocumento* p_Doc);
 int Retorna_Idx_Palavra_ViaDoc(tDocumento* pDoc_Digitadas, int i);
 int ExistePalavraNoDoc(int idx_palavra, tDocumento *pDoc);
+int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc);
+
+/**
+ * @brief Compara a distancia entre docs para utilizar a funcao de busca binaria (bsearch) ou de ordenacao (qsort) no resultado dos cossenos.
+ * 
+ * @param d1 ponteiro do tipo double (elemento 1).
+ * @param d2 ponteiro do tipo double (elemento 2).
+ * @return = 0 caso sejam iguais; < 0 caso o primeiro seja maior que o segundo; > 0 caso o primeiro seja menor que o segundo.
+ */
+int Cmp_Distancia_Docs(const void *d1, const void *d2);
 
 //------classificador------
 /**

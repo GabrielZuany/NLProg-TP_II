@@ -57,11 +57,14 @@ void ResetaString(char str[]);
 int Acesso_Idx_Palavra(tPalavra* palavra);
 int PalavraRegistrada(tPalavra **pp_Palavras, int qtdPalavras, char palavra[]);
 int Retorna_Idx_Palavra(tPalavra** pp_Palavras, char palavra[]);
+tPalavra* Retorna_Palavra(tPalavra** pp_Palavras, char palavra[], int alterado);
+void OrganizaPalavrasPorIndice(tPalavra **pp_Palavras, int tam);
 int Get_Qtd_Palavras_No_Doc(tPalavra** pp_Palavras, int idx_doc);
 int RetornaFrequenciaPalavra(tPalavra* p_palavra, int idx_doc);
 int Get_FrequenciaPalavraNoDoc(tPalavra* p_Palavra, int pos);
 double Acesso_TF_IDF_NoDocX(tPalavra* p_palavra, int idx_documento);
 void ZeraPonteiroDeInteiro(int *p, int tam);
+int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador);
 
 /**
  * @brief Verifica se a palavra dada consta no dicionário. Necessário para adicionar palavras sem repetir no dicionário.
@@ -86,6 +89,15 @@ void Insere_TF_IDF_em_Doc(double TF_IDF, int idx_doc, tPalavra *p_palavra);
  */
 void Atualiza_Palavra_TF_IDF(tPalavra *p_palavra, int qtdDocumentos);
 
+/**
+ * @brief Compara a tf-idf para utilizar a funcao de busca binaria (bsearch) ou de ordenacao (qsort).
+ * 
+ * @param f1 ponteiro do tipo double (elemento 1).
+ * @param f2 ponteiro do tipo double (elemento 2).
+ * @return = 0 caso sejam iguais; < 0 caso o primeiro seja maior que o segundo; > 0 caso o primeiro seja menor que o segundo.
+ */
+int Cmp_TF_IDF(const void* f1, const void* f2);
+
 int Calcula_EmQuantosDocumentosEstaPresente(tPalavra *p_palavra, int qtdDocumentos);
 double Calcula_TF_IDF(double TF,double n, double DF);
 
@@ -105,8 +117,17 @@ void LiberaPalavras(tPalavra **pp_Palavras);
 
 //---------relatorio palavra-------------
 
-//usado no qsort em RelatorioPalavra_frequencia()
+
 int Cmp_frequencia_Palavras(const void *p1, const void *p2);
+
+/**
+ * @brief Compara a frequencia para utilizar a funcao de busca binaria (bsearch) ou de ordenacao (qsort).
+ * 
+ * @param f1 ponteiro do tipo int (elemento 1).
+ * @param f2 ponteiro do tipo int (elemento 2).
+ * @return = 0 caso sejam iguais; < 0 caso o primeiro seja maior que o segundo; > 0 caso o primeiro seja menor que o segundo.
+ */
+int Cmp_Freq(const void* f1, const void* f2);
 
 
 /**
@@ -132,4 +153,5 @@ int EncontraDocumentoComFrequenciaX(tPalavra *p_palavra, int frequencia, int *pA
 
 int cmp_palavra_nome_bsearch(const void *a, const void*b);
 int cmp_palavra_nome_qsort(const void *a, const void *b);
+
 #endif

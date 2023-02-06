@@ -35,7 +35,6 @@ void LiberaBuscador(double* TF_IDF_docs, double* aux_TF_IDF_docs, int* acessados
  * @param k K vizinhos mais proximos (K-Nearest Neighbors - KNN).
  */
 void Classificador(tDocumento** pp_Docs, tPalavra** pp_Palavras, int k);
-
 void LiberaAuxiliaresClassificador(tDocumento *pDoc_Digitadas, int *idx_palavra, double *p_frequencia, double *pResultadosCos, double *p_aux_ResultadosCos, int *pAcessados);
 
 //---relatorio palavra
@@ -104,33 +103,6 @@ int LeQuantidadeDeArquivos(FILE* fArquivo_caminho_noticias);
 int ConfereTxt(char str[]);
 
 /**
- * @brief Compara a distancia entre docs para utilizar a funcao de busca binaria (bsearch) ou de ordenacao (qsort) no resultado dos cossenos.
- * 
- * @param d1 ponteiro do tipo double (elemento 1).
- * @param d2 ponteiro do tipo double (elemento 2).
- * @return = 0 caso sejam iguais; < 0 caso o primeiro seja maior que o segundo; > 0 caso o primeiro seja menor que o segundo.
- */
-int Cmp_Distancia_Docs(const void *d1, const void *d2);
-
-/**
- * @brief Compara a frequencia para utilizar a funcao de busca binaria (bsearch) ou de ordenacao (qsort).
- * 
- * @param f1 ponteiro do tipo int (elemento 1).
- * @param f2 ponteiro do tipo int (elemento 2).
- * @return = 0 caso sejam iguais; < 0 caso o primeiro seja maior que o segundo; > 0 caso o primeiro seja menor que o segundo.
- */
-int Cmp_Freq(const void* f1, const void* f2);
-
-/**
- * @brief Compara a tf-idf para utilizar a funcao de busca binaria (bsearch) ou de ordenacao (qsort).
- * 
- * @param f1 ponteiro do tipo double (elemento 1).
- * @param f2 ponteiro do tipo double (elemento 2).
- * @return = 0 caso sejam iguais; < 0 caso o primeiro seja maior que o segundo; > 0 caso o primeiro seja menor que o segundo.
- */
-int Cmp_TF_IDF(const void* f1, const void* f2);
-
-/**
  * @brief Garante que o usuario digite uma opcao dentre as que estao disponiveis no menu.
  * 
  * @return int opcao do usuario.
@@ -140,8 +112,7 @@ int GaranteOpcaoValida();
 int OpcaoValida(int opcao);
 void ResetaString(char str[]);
 void ResetaStrComTam(char str[], int tam);
-int VerificaPalavraJaDigitada(int* idx_palavra, int idx_aux, int qtd_palavras_classificador);
-int VerificaGeneroExiste(char tipo[], char **pp_auxGenero, int idx_doc);
+
 double calculaSomatorio_TF_IDF(tDocumento* p_Doc, tPalavra** pp_Palavras , int *idx_palavra, int qtd_palavras_buscador, int idx_documento);
 
 /**
