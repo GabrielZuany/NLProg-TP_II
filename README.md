@@ -2,12 +2,6 @@
 # Programação II - DI/UFES 
 # Trabalho Prático II - NLProg
 
-**Data de entrega**: 02/02/2023
-
-**Forma de Entrega:** Os arquivos .h, .c e o Makefile devem ser comprimidos em um arquivo ".zip" e submetidos por todos os integrantes do grupo na atividade do AVA. **Trabalhos entregues fora do prazo definido acima receberão nota zero**. 
-
-NÃO ADICIONAR no `.zip` arquivos que não forem código-fonte (e.g., arquivos de teste, diretórios vazios, arquivos gerados pelos programas, etc.).
-
 ## Contexto
 
 O trabalho consiste em desenvolver um conjunto de programas  para mineração de dados em textos de notícias de jornal. 
@@ -150,79 +144,6 @@ Considere então os seguintes exemplos de entrada de classificacao:
 **3. Relatório de Palavra**: O usuário deve digitar uma palavra e o programa deve exibir o número total de documentos em que a palavra aparece, os 10 em que ela aparece com mais frequência e a frequência da palavra por classe. Ambas as listas devem ser ordenadas com os itens de maior contagem aparecendo primeiro. A ordenação deve ser feita ao selecionar a opção usando a função qsort.
 
 **4. Relatório de Documentos**: Exibe os 10 documentos mais longos e os 10 mais curtos com o número de palavras e as respectivas classes. As listas devem ser ordenadas, a primeira do maior para o menor e a segunda do menor para o maior. A ordenação deve ser feita ao selecionar a opção usando a função qsort.
-
-## Programa 3: Experimentos
-
-O programa 3 deverá receber quatro argumentos via linha de comando:
-
-1. O caminho para o arquivo binário contendo os índices gerado pelo programa 1.
-2. O caminho para o arquivo contendo as notícias e classes do conjunto de teste (o teste.txt).
-3. Um número inteiro K utilizado pelo classificador.
-4. O nome do arquivo de saída que o programa deverá escrever.
-
-O programa deve utilizar a técnica de classificação de notícias descrito na seção anterior para classificar todas as notícias do conjunto de teste e salvar em um arquivo texto especificado via linha de comando a acurácia (percentual de acerto) do método e a matriz de confusão. 
-
-Na matriz de confusão, linhas representam a classe verdadeira da notícia e colunas representam a classe estimada pelo sistema. Assim, a matriz de confusão é uma matriz quadrada cuja largura e altura são iguais ao número de classes. A célula (i, j) da matriz contém o número de notícias do conjunto de teste que são da classe i, mas foram classificados como sendo da classe j. 
-
-Um classificador ideal retornaria a classe verdadeira para todas as amostras, o que levaria a uma matriz de confusão diagonal (é improvável que este caso ideal seja alcançado no trabalho). Além da matriz de confusão e da acurácia, deve ser salvo no arquivo uma sequência de linhas indicando à qual classe as linhas/colunas da matriz de confusão se referem.
-
-A título de exemplo, a figura abaixo mostra a matriz de confusão para uma base de dados que contém 7 notícias das classes EPT, ECO e POL. A tabela da esquerda descreve para cada notícia as classes verdadeiras e estimadas usando os algoritmos descritos mais acima. A tabela direita é a matriz de confusão. A primeira linha contendo os valores (2, 0, 0) indica que existiam 2 documentos da classe ECO e ambos foram classificados corretamente. Os valores (1, 2, 0) na segunda linha indicam que existiam 3 documentos da classe EPT e 2 deles foram classificados corretamente e 1 foi incorretamente classificado como sendo da classe ECO. O fato da soma dos elementos da primeira coluna ser muito maior que das demais (4, enquanto as outras têm valores  2 e 1), indica que o classificador tem uma tendência de atribuir a classe ECO para a maioria das notícias.
-
-![matriz de confusao](assets/confmat.png)
-
-
-## Restrições 
-
-* Devem ser usadas as funções `qsort` e `bsearch` sempre que for necessário ordenar vetores ou buscar itens em vetores ordenados.
-
-* Não será permitido que as estatísticas nos relatórios do programa principal exibidas sejam pré-computadas e armazenadas nas estruturas. Elas deverão ser derivadas dos índices quando solicitado pelo usuário. 
-
-## Avaliação 
-
-### Critérios Funcionais
-
-#### 1. Programa 1: 20%
-
-1.a. Indice de palavras correto: 7%
-
-1.b. Indice de documentos correto: 7%
-
-1.c. Arquivo binário escrito corretamente: 6%
-
-#### 2. Programa 2: 60%
-
-2.a. Buscador: 20%
-
-2.b. Classificador: 30%
-
-2.c. Relatório de Palavra: 5%
-
-2.d. Relatório de Documentos: 5%
-
-#### 3. Programa 3: 20%
-
-3.a. Classes dos documentos de teste produzidas corretamente: 5%
-
-3.a. Acurácia correta: 2%
-
-3.b. Matriz de confusão correta: 10%
-
-3.c. Escrita do arquivo texto: 3%
-
-### Pontos Extras 
-
-* [+10%] Implementar o classificador por centróide mais próximo. Este classificador primeiro calcula o valor médio de frequência/TF-IDF de todas as notícias de cada classe. Estes vetores médios são chamados de cetróides e eles representam as características mais comuns dos documentos que compõe aquela classe (observe a semelhança à media das playlists no TP1). Cada classe terá um centróide associado. Para classificar uma nova notícia, é buscado qual é o centróide mais similar (usando o cosseno) à nova notícia e é retornada a classe associada. Este classificador tende a ser mais rápido que o classificador por K vizinhos mais próximos dado que ao invés de medir a distância para todos os documentos, será calculada a distância apenas para os centróides. Contudo, ele tende a levar à mais erros quando os vetores no espaço não se aproximam de uma distribuição Gaussiana. Para ganhar o ponto extra, o grupo deve:
-  * Salvar os centróides no arquivo produzido pelo programa 1.
-  * Adicionar uma opção extra no programa 2 para realizar a classificação usando o algoritmo de centróide mais próximo.
-  * Adicionar no programa 3 a acurácia e a matriz de confusão usando o novo algoritmo.
-
-* [+10%] Comparar a performance de variações do algoritmo de classificação: No programa 3, calcular a acurácia e a matriz de confusão para as seguintes variações dos algoritmos propostos:
-  * Frequência dos termos ao invés do TF-IDF e similaridade por cosseno.
-  * Presença dos termos nos documentos ao invés do TF-IDF e similaridade por cosseno. Neste caso, cada palavra receberá valor 1 se existir em um documento e 0 se não existir, independente da frequência.
-  * Peso dos termos por TF-IDF e distância euclidiana ao invés do cosseno.
-  * Presença dos termos nos documentos ao invés do TF-IDF e  distância euclidiana ao invés do cosseno.
-
-[+10%] Implementar uma tabela hash e utilizá-la como índice de palavras. Para obter a pontuação, o grupo deve implementar um TAD Tabela Hash e utilizá-lo para armazenar o índice de palavras. Ele deve ser utilizado inclusive no processo de construção do índice. Para obter a pontuação, o aluno deverá explicar durante a entrevista como a estrutura de dados funciona e como a peformance (em termos de tempo) das operações de inserção, verificação de pertinência, atualização, remoção e iteração sobre elementos se compara com a de um vetor.
 
 ### Critérios de Qualidade
 
